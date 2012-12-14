@@ -50,3 +50,4 @@ gem 'carrierwave' # https://github.com/jnicklas/carrierwave
 gem 'rmagick'
 gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
 gem 'ledermann-rails-settings', :require => 'rails-settings', :git => "git://github.com/ledermann/rails-settings.git" # https://github.com/ledermann/rails-settings
+gem 'therubyracer'
