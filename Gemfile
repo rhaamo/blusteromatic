@@ -7,6 +7,8 @@ gem 'rails', '3.2.9'
 
 gem 'sqlite3'
 
+gem 'haml'
+gem 'twitter-bootstrap-rails'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -29,10 +31,22 @@ gem 'jquery-rails'
 # gem 'jbuilder'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+group :production do
+  gem 'unicorn'
+end
 
 # Deploy with Capistrano
 # gem 'capistrano'
 
 # To use debugger
 # gem 'debugger'
+
+gem 'devise'
+gem 'sentient_user'
+gem 'kaminari'
+gem 'cancan'
+gem 'friendly_id'
+gem 'carrierwave' # https://github.com/jnicklas/carrierwave
+gem 'rmagick'
+gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
+gem 'ledermann-rails-settings', :require => 'rails-settings', :git => "git://github.com/ledermann/rails-settings.git" # https://github.com/ledermann/rails-settings
