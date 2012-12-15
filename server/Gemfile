@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.9'
+gem 'bcrypt-ruby' # probably possible to remove it
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -41,6 +42,7 @@ end
 # To use debugger
 # gem 'debugger'
 
+gem 'less-rails'
 gem 'devise'
 gem 'sentient_user'
 gem 'kaminari'

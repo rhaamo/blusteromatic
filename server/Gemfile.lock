@@ -55,6 +55,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.4.0)
+    commonjs (0.2.6)
     devise (2.1.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
@@ -76,6 +77,11 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.7.4)
+    less (2.2.2)
+      commonjs (~> 0.2.6)
+    less-rails (2.2.6)
+      actionpack (>= 3.1)
+      less (~> 2.2.0)
     mail (2.4.4)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -150,6 +156,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt-ruby
   cancan
   carrierwave
   coffee-rails (~> 3.2.1)
@@ -159,6 +166,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   ledermann-rails-settings!
+  less-rails
   nested_form!
   rails (= 3.2.9)
   rmagick
