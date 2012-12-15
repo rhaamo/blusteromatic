@@ -9,13 +9,13 @@
       <%= link_to Settings.app_title || "Blusteromatic", root_url, :class => "brand" %>
       <div class="nav-collapse">
 	<ul class="nav">
-	  <li></li>
+	  <li><%= link_to "Jobs list", root_url %></li>
 	</ul> <!-- ul nav -->
 
 	<div class="btn-group pull-right">
             <%= link_to current_user, :class => "btn btn-primary" do %>
 	    <i class="icon-user icon-white"></i>
-	    <%= @current_user.login %>
+	    <%= current_user.login %>
             <% end %>
 
             <%= link_to "#", :class => "btn btn-info dropdown-toggle", :"data-toggle" => "dropdown" do %>
@@ -32,7 +32,7 @@
 
 	      <li class="divider"></li>
 	      <li>
-		<%= link_to logout_path do %>
+		<%= link_to destroy_user_session_path, :method => :delete do %>
 		  <i class="icon-off"></i>
 		  <%= t 'header.logout' %>
 		<% end %>
