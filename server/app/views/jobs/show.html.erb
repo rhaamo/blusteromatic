@@ -1,0 +1,35 @@
+<%- model_class = Job -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @job.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:priority) %>:</strong></dt>
+  <dd><%= @job.priority %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
+  <dd><%= @job.status %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:node_status) %>:</strong></dt>
+  <dd><%= @job.node_status %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @job.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:filename) %>:</strong></dt>
+  <dd><%= @job.filename %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:job_name) %>:</strong></dt>
+  <dd><%= @job.job_name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:node_id) %>:</strong></dt>
+  <dd><%= @job.node_id %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              jobs_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_job_path(@job), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              job_path(@job),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

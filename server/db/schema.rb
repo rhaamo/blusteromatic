@@ -11,7 +11,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121215141039) do
+ActiveRecord::Schema.define(:version => 20121215152620) do
+
+  create_table "jobs", :force => true do |t|
+    t.string   "name"
+    t.integer  "priority"
+    t.string   "status"
+    t.string   "node_status"
+    t.integer  "user_id"
+    t.string   "filename"
+    t.string   "job_name"
+    t.integer  "node_id"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "settings", :force => true do |t|
     t.string   "var",                       :null => false

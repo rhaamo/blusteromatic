@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  priority: 1
+  status: MyString
+  node_status: MyString
+  user_id: 1
+  filename: MyString
+  job_name: MyString
+  node_id: 1
+
+two:
+  name: MyString
+  priority: 1
+  status: MyString
+  node_status: MyString
+  user_id: 1
+  filename: MyString
+  job_name: MyString
+  node_id: 1
