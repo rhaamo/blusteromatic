@@ -11,11 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121215194216) do
+ActiveRecord::Schema.define(:version => 20121215201236) do
 
   create_table "jobs", :force => true do |t|
     t.string   "name"
-    t.integer  "priority"
     t.string   "status"
     t.string   "node_status"
     t.integer  "user_id"
@@ -28,6 +27,7 @@ ActiveRecord::Schema.define(:version => 20121215194216) do
     t.integer  "render_frame_start", :default => 0
     t.integer  "render_frame_stop",  :default => 0
     t.string   "render_engine",      :default => "CYCLES"
+    t.integer  "priority",           :default => 0
   end
 
   create_table "settings", :force => true do |t|
