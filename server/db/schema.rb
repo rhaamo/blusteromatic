@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121215152620) do
+ActiveRecord::Schema.define(:version => 20121215194216) do
 
   create_table "jobs", :force => true do |t|
     t.string   "name"
@@ -22,8 +22,12 @@ ActiveRecord::Schema.define(:version => 20121215152620) do
     t.string   "filename"
     t.string   "job_name"
     t.integer  "node_id"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+    t.string   "render_type",        :default => "SINGLE"
+    t.integer  "render_frame_start", :default => 0
+    t.integer  "render_frame_stop",  :default => 0
+    t.string   "render_engine",      :default => "CYCLES"
   end
 
   create_table "settings", :force => true do |t|

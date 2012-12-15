@@ -12,6 +12,41 @@
     </div>
   </div>
 
+  <div class="control-group">
+    <%= f.label :render_type, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :render_type, :class => 'number_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :render_frame_start, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :render_frame_start, :class => 'number_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :render_frame_stop, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :render_frame_stop, :class => 'number_field' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :render_engine, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :render_engine, :class => 'number_field' %>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
