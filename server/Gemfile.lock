@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/ledermann/rails-settings.git
-  revision: b987f2bc91fdb0733440ccaf3924777a7d6da6a7
-  specs:
-    ledermann-rails-settings (1.2.0)
-      activerecord (>= 2.3)
-
-GIT
   remote: git://github.com/ryanb/nested_form.git
   revision: f591c0d72d0119c50511c16153b3960fe2da8b71
   specs:
@@ -105,6 +98,8 @@ GEM
       activesupport (= 3.2.9)
       bundler (~> 1.0)
       railties (= 3.2.9)
+    rails_config (0.3.1)
+      activesupport (>= 3.0)
     railties (3.2.9)
       actionpack (= 3.2.9)
       activesupport (= 3.2.9)
@@ -165,10 +160,10 @@ DEPENDENCIES
   haml
   jquery-rails
   kaminari
-  ledermann-rails-settings!
   less-rails
   nested_form!
   rails (= 3.2.9)
+  rails_config
   rmagick
   sass-rails (~> 3.2.3)
   sentient_user
