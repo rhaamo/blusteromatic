@@ -1,0 +1,17 @@
+Node API docs.
+
+All calls are in JSON.
+
+
+Call to tell the dispatcher we are alive.
+
+POST /api/node/heartbeat
+     string, name : Node hostname
+     string, os   : Node OS
+     string, blender_engines : "list,of,blender,engine"
+     string, uuid : node UUID
+     string, blender_version : blender version
+
+Returns JSON:
+     validated: true or false
+     paused: true or false
