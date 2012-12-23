@@ -1,4 +1,6 @@
-api: http://localhost:3000/api
-token: foobarbazqux
+api_host: localhost
+api_port: 3000
+api_heartbeat: /api/node/heartbeat
+api_token: foobarbazqux
 blender_path: /home/rhaamo/Desktop/blender-2.65a-linux-glibc211-x86_64
 blender_bin: blender
