@@ -1,0 +1,4 @@
+api: http://localhost:3000/api
+token: foobarbazqux
+blender_path: /home/rhaamo/Desktop/blender-2.65a-linux-glibc211-x86_64
+blender_bin: blender
