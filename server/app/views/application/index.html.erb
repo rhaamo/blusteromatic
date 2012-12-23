@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="span12">
+    <table class="table table-striped table-condensed">
+      <caption>Jobs</caption>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Engine</th>
+          <th>Type</th>
+          <th>Priority</th>
+          <th>Node</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%- @jobs.each do |job| %>
+          <tr>
+            <td><%= job.name %></td>
+            <td><%= job.render_engine %></td>
+            <%- if job.render_type == 'SINGLE' %>
+              <td><%= job.render_type %></td>
+            <% else %>
+              <td>
+                <%= job.render_type %> <%= job.render_frame_start %> - <%= job.render_frame_stop %>
+              </td>
+            <% end %>
+            <td><%= job.priority %></td>
+            <%- if job.node %>
+              <td><%= job.node.name %></td>
+            <% else %>
+              <td>N/A</td>
+            <% end %>
+            <td>
+              Job: <%= job.status || "N/A" %><br />
+              Node: <%= job.node_status || "N/A" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<br />
+
+<div class="row">
+  <div class="span12">
+    <table class="table table-striped table-condensed">
+      <caption>Nodes</caption>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>OS</th>
+          <th>Engines</th>
+          <th>Last ping</th>
+          <th>Blender version</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%- @nodes.each do |node| %>
+          <tr>
+            <td><%= node.name %></td>
+            <td><%= node.os %></td>
+            <td><%= node.blender_engines %></td>
+            <td><%= node.last_ping %></td>
+            <td><%= node.blender_version %></td>
+            <td>validation / delete / pause</td>
+          </tr>
+        <% end %>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

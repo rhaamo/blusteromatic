@@ -1,4 +1,14 @@
 Blusteromatic::Application.routes.draw do
+  namespace :api do
+    resource :node do
+      post "heartbeat"
+      get "get_jobs"
+      post "assign_job"
+      post "update_job"
+      post "finish_job"
+    end
+  end
+
   resources :jobs
 
   devise_for :users
@@ -55,7 +65,7 @@ Blusteromatic::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # root :to => 'welcome#index'
-  root :to => 'jobs#index'
+  root :to => 'application#index'
 
   # See how all your routes lay out with "rake routes"
 
