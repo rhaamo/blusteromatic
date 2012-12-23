@@ -11,3 +11,7 @@ body {
 .footer div img {
     max-width: 200%;
 }
+.table tbody tr.row_red td,
+.table tbody tr.row_red th {
+    background-color: orange;
+}

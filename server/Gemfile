@@ -6,6 +6,9 @@ gem 'bcrypt-ruby' # probably possible to remove it
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
+gem 'pry'
+gem 'rails-pry'
+
 gem 'sqlite3'
 
 gem 'haml'

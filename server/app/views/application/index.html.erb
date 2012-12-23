@@ -59,7 +59,11 @@
       </thead>
       <tbody>
         <%- @nodes.each do |node| %>
-          <tr>
+          <%- if Time.now - node.last_ping > 1.hour %>
+            <tr class="row_red">
+          <% else %>
+            <tr>
+          <% end %>
             <td><%= node.name %></td>
             <td><%= node.os %></td>
             <td><%= node.blender_engines %></td>
