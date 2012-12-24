@@ -6,12 +6,23 @@ All calls are in JSON.
 Call to tell the dispatcher we are alive.
 
 POST /api/node/heartbeat
-     string, name : Node hostname
-     string, os   : Node OS
-     string, blender_engines : "list,of,blender,engine"
-     string, uuid : node UUID
-     string, blender_version : blender version
+     post a json containing:
+     hostname	: Node hostname
+     os		: Node OS
+     engines	: "list,of,blender,engine"
+     uuid	: node UUID
+     version	: blender version with revision
+     access_token	: api token
 
 Returns JSON:
-     validated: true or false
-     paused: true or false
+     validated: 0 or 1
+     paused: 0 or 1 (not implemented)
+     node if (in the database)
+
+Example:
+     {"version"=>"2.65 (sub 0) r53177",
+      "engines"=>"BLENDER_RENDER,BLENDER_GAME,CYCLES,POVRAY_RENDER",
+      "os"=>"linux",
+      "hostname"=>"fluttershy",
+      "uuid"=>"foobarbazqux",
+      "access_token"=>"foobar"}
