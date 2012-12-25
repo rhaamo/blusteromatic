@@ -10,6 +10,7 @@ gem 'pry'
 gem 'rails-pry'
 
 gem 'sqlite3'
+gem 'mysql2'
 
 gem 'haml'
 gem 'twitter-bootstrap-rails'
@@ -55,4 +56,6 @@ gem 'carrierwave' # https://github.com/jnicklas/carrierwave
 gem 'rmagick'
 gem "nested_form", :git => "git://github.com/ryanb/nested_form.git"
 gem "rails_config" # https://github.com/railsjedi/rails_config
+
+gem 'libv8', '~> 3.11.8'
 gem 'therubyracer'
