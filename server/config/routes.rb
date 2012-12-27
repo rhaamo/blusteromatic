@@ -9,7 +9,9 @@ Blusteromatic::Application.routes.draw do
     end
   end
 
-  resources :jobs
+  resources :jobs do
+    get :dispatch
+  end
 
   devise_for :users
 

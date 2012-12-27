@@ -37,6 +37,9 @@
             </td>
             <td>
               <div class="btn-group">
+              <%- if !job.node %>
+                <%= link_to "dispatch", job_dispatch_url(job), :class => "btn btn-mini btn-success" %>
+              <% end %>
               <%= link_to "delete", job_path(job), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
               </div>
             </td>
