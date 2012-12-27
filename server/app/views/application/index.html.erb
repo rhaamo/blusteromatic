@@ -69,7 +69,15 @@
             <td><%= node.blender_engines %></td>
             <td><%= node.last_ping %></td>
             <td><%= node.blender_version %></td>
-            <td>validation / delete / pause</td>
+            <td>
+              <div class="btn-group">
+              <%- if node.validated != 1 %>
+                <%= link_to "activate", node_activate_url(node), :class => "btn btn-mini btn-success" %>
+              <% end %>
+              <%= link_to "delete", node_path(node), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
+              <%= link_to "pause", node_pause_url(node), :class => "btn btn-mini btn-info" %>
+              </div>
+            </td>
           </tr>
         <% end %>
 

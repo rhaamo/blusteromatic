@@ -15,6 +15,12 @@ Blusteromatic::Application.routes.draw do
 
   resources :users
 
+  resources :nodes do
+    get :activate
+    get :deactivate
+    get :pause
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
