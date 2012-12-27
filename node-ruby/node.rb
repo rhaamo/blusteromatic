@@ -38,6 +38,7 @@ end
 @node_blendercfg['os'] = get_os
 @node_blendercfg['hostname'] = get_hostname
 @node_blendercfg['uuid'] = get_uuid
+@node_blendercfg['compute'] = @config['compute']
 
 @thread_node_state = {:validated => false, :paused => false} # set default values
 

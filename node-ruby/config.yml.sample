@@ -4,3 +4,4 @@ api_heartbeat: /api/node/heartbeat
 api_token: foobarbazqux
 blender_path: /home/rhaamo/Desktop/blender-2.65a-linux-glibc211-x86_64
 blender_bin: blender
+compute: CPU,GPU
