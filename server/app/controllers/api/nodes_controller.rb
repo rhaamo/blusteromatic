@@ -9,10 +9,15 @@ class Api::NodesController < ApplicationController
                                          :blender_engines => params[:engines],
                                          :uuid => params[:uuid],
                                          :blender_version => params[:version],
-                                         :name => params[:hostname]
+                                         :name => params[:hostname],
+                                         :compute => params[:compute]
                                          )
       # Workaround for update_or_create which doesn't seems to exist !
       node.last_ping = Time.now
+      node.blender_engines = params[:engines]
+      node.blender_version = params[:version]
+      node.name = params[:hostname]
+      node.compute = params[:compute]
       node.save
       hash = {:validated => node.validated, :id => node.id}
       render :json => hash.to_json

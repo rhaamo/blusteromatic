@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121227165800) do
+ActiveRecord::Schema.define(:version => 20121227173552) do
 
   create_table "jobs", :force => true do |t|
     t.string   "name"
@@ -35,16 +35,17 @@ ActiveRecord::Schema.define(:version => 20121227165800) do
   add_index "jobs", ["slug"], :name => "index_jobs_on_slug", :unique => true
 
   create_table "nodes", :force => true do |t|
-    t.string   "name",                           :null => false
-    t.string   "os",                             :null => false
-    t.string   "blender_engines",                :null => false
-    t.string   "uuid",                           :null => false
+    t.string   "name",                               :null => false
+    t.string   "os",                                 :null => false
+    t.string   "blender_engines",                    :null => false
+    t.string   "uuid",                               :null => false
     t.datetime "last_ping"
-    t.string   "blender_version",                :null => false
-    t.integer  "validated",       :default => 0, :null => false
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
+    t.string   "blender_version",                    :null => false
+    t.integer  "validated",       :default => 0,     :null => false
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.string   "slug"
+    t.string   "compute",         :default => "CPU"
   end
 
   add_index "nodes", ["slug"], :name => "index_nodes_on_slug", :unique => true

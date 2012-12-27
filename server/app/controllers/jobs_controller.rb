@@ -82,4 +82,11 @@ class JobsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def assign
+    @job = Job.find(params[:job_id])
+    # find a node compatible with this kind of caracteristics : CPU or GPU, RENDER_ENGINE
+    redirect_to root_url, :notice => "Hope it's good."
+  end
+
 end
