@@ -6,6 +6,7 @@
         <tr>
           <th>Name</th>
           <th>Engine</th>
+          <th>Compute</th>
           <th>Type</th>
           <th>Priority</th>
           <th>Node</th>
@@ -18,6 +19,7 @@
           <tr>
             <td><%= job.name %></td>
             <td><%= job.render_engine %></td>
+            <td><%= job.compute %></td>
             <%- if job.render_type == 'SINGLE' %>
               <td><%= job.render_type %></td>
             <% else %>

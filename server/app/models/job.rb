@@ -1,5 +1,5 @@
 class Job < ActiveRecord::Base
-  attr_accessible :filename, :job_name, :name, :node_id, :node_status, :priority, :status, :user_id, :render_type, :render_frame_start, :render_frame_stop, :render_engine, :dot_blend
+  attr_accessible :filename, :job_name, :name, :node_id, :node_status, :priority, :status, :user_id, :render_type, :render_frame_start, :render_frame_stop, :render_engine, :dot_blend, :compute, :dot_blend_cache
 
   extend FriendlyId
   friendly_id :name, use: :slugged
