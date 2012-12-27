@@ -1,5 +1,5 @@
 class Job < ActiveRecord::Base
-  attr_accessible :filename, :job_name, :name, :node_id, :node_status, :priority, :status, :user_id, :render_type, :render_frame_start, :render_frame_stop, :render_engine
+  attr_accessible :filename, :job_name, :name, :node_id, :node_status, :priority, :status, :user_id, :render_type, :render_frame_start, :render_frame_stop, :render_engine, :dot_blend
 
   extend FriendlyId
   friendly_id :name, use: :slugged
@@ -8,5 +8,9 @@ class Job < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :node
+
+  mount_uploader :dot_blend, DotBlendUploader
+
+  validates_presence_of :dot_blend, :render_engine, :render_frame_stop, :render_frame_start, :render_type, :priority, :name
 
 end

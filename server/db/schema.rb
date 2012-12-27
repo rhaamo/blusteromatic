@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121216130918) do
+ActiveRecord::Schema.define(:version => 20121227165800) do
 
   create_table "jobs", :force => true do |t|
     t.string   "name"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20121216130918) do
     t.string   "render_engine",      :default => "CYCLES"
     t.integer  "priority",           :default => 0
     t.string   "slug"
+    t.string   "dot_blend"
   end
 
   add_index "jobs", ["slug"], :name => "index_jobs_on_slug", :unique => true
