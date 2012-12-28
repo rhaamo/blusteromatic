@@ -12,5 +12,10 @@ class Job < ActiveRecord::Base
   mount_uploader :dot_blend, DotBlendUploader
 
   validates_presence_of :dot_blend, :render_engine, :render_frame_stop, :render_frame_start, :render_type, :priority, :name
+  before_validation :compute_hash
+
+  def compute_hash
+    self.md5 = Digest::MD5.hexdigest(self.dot_blend.read)
+  end
 
 end

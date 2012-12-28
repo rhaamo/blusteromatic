@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121227174349) do
+ActiveRecord::Schema.define(:version => 20121228115508) do
 
   create_table "jobs", :force => true do |t|
     t.string   "name"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20121227174349) do
     t.string   "slug"
     t.string   "dot_blend"
     t.string   "compute",            :default => "CPU"
+    t.string   "md5"
   end
 
   add_index "jobs", ["slug"], :name => "index_jobs_on_slug", :unique => true

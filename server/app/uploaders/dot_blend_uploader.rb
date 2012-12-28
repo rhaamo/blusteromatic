@@ -30,6 +30,7 @@ class DotBlendUploader < CarrierWave::Uploader::Base
     %w(blend tar.gz targz tgz zip rar)
   end
 
+
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   # def filename
