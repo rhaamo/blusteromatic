@@ -23,10 +23,11 @@ class Api::NodesController < ApplicationController
       render :json => hash.to_json
     end
 
-    def get_jobs
-    end
-
-    def assign_job
+    def get_job
+      # Got job request, infos available : compute, uuid
+      node = Node.find_by_uuid(params[:uuid])
+      job = Job.find_by_node_id_and_compute(node.id, params[:compute])
+      render :json => job.to_json
     end
 
     def update_job

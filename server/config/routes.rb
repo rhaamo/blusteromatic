@@ -2,8 +2,7 @@ Blusteromatic::Application.routes.draw do
   namespace :api do
     resource :node do
       post "heartbeat"
-      get "get_jobs"
-      post "assign_job"
+      get "get_job"
       post "update_job"
       post "finish_job"
     end
