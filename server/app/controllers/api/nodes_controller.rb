@@ -36,6 +36,14 @@ class Api::NodesController < ApplicationController
     end
 
     def update_job
+      # Got job update, infos available : uuid, job ID, console_log, :job_status, :node_status
+      node = Node.find_by_uuid(params[:uuid])
+      job = Job.find_by_node_id_and_id(node.id, params[:job_id])
+      job.log = params[:console_log]
+      job.status = params[:job_status]
+      job.node_status = params[:node_status]
+      job.save
+      render :json => {:status => 'ok'}
     end
 
     def finish_job
