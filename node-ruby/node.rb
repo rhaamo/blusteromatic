@@ -96,7 +96,7 @@ th_job_cpu = Thread.new do
       paused = @thread_node_state[:paused]
     }
     if !validated or paused
-      puts "Node in pause or not validated."
+      puts "CPU: Node in pause or not validated."
       sleep 10
       next
     end
@@ -118,18 +118,34 @@ end
 # ===================================
 # Tread: GPU
 # ===================================
-#th_job_gpu = Thread.new do
-#  while true
-#    st = nil
-#    semaphore.synchronize {
-#      st = validated
-#    }
-#    puts "GPU JOB: #{st}"
-#    sleep 10
-#  end
-#end
+th_job_gpu = Thread.new do
+  while true
+    validated, paused = nil
+    semaphore.synchronize {
+      validated = @thread_node_state[:validated]
+      paused = @thread_node_state[:paused]
+    }
+    if !validated or paused
+      puts "GPU: Node in pause or not validated."
+      sleep 10
+      next
+    end
+
+    infos = {:uuid => @node_blendercfg['uuid'], :compute => "GPU", :access_token => @config['api_token']}
+    gpu_resp = api_call('get', @config['api_get_job'], infos)
+
+    if !gpu_resp
+      sleep 10
+      next
+    end
+
+    puts "[#{@config['api_get_job']}] response : #{gpu_resp[:code]} #{gpu_resp[:message]} : #{gpu_resp[:body]}"
+
+    sleep 10
+  end
+end
 
 # Start heartbeat thread
 th_heartbeat.join
 th_job_cpu.join
-#th_job_gpu.join
+th_job_gpu.join

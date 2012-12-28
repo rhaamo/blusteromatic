@@ -27,6 +27,11 @@ class Api::NodesController < ApplicationController
       # Got job request, infos available : compute, uuid
       node = Node.find_by_uuid(params[:uuid])
       job = Job.find_by_node_id_and_compute(node.id, params[:compute])
+
+      if !job
+        job = {:error => "No jobs available"}
+      end
+
       render :json => job.to_json
     end
 
