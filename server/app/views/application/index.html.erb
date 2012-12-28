@@ -1,54 +1,6 @@
 <div class="row">
   <div class="span12">
-    <table class="table table-striped table-condensed">
-      <caption>Jobs</caption>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Engine</th>
-          <th>Compute</th>
-          <th>Type</th>
-          <th>Priority</th>
-          <th>Node</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%- @jobs.each do |job| %>
-          <tr>
-            <td><%= job.name %></td>
-            <td><%= job.render_engine %></td>
-            <td><%= job.compute %></td>
-            <%- if job.render_type == 'SINGLE' %>
-              <td><%= job.render_type %></td>
-            <% else %>
-              <td>
-                <%= job.render_type %> <%= job.render_frame_start %> - <%= job.render_frame_stop %>
-              </td>
-            <% end %>
-            <td><%= job.priority %></td>
-            <%- if job.node %>
-              <td><%= job.node.name %></td>
-            <% else %>
-              <td>N/A</td>
-            <% end %>
-            <td>
-              Job: <%= job.status || "N/A" %><br />
-              Node: <%= job.node_status || "N/A" %>
-            </td>
-            <td>
-              <div class="btn-group">
-              <%- if !job.node %>
-                <%= link_to "assign", job_assign_url(job), :class => "btn btn-mini btn-success" %>
-              <% end %>
-              <%= link_to "delete", job_path(job), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <%= render :partial => 'jobs/list' %>
   </div>
 </div>
 
@@ -71,7 +23,7 @@
       </thead>
       <tbody>
         <%- @nodes.each do |node| %>
-          <%- if Time.now - node.last_ping > 1.hour %>
+          <%- if !node.alive? %>
             <tr class="row_red">
           <% else %>
             <tr>

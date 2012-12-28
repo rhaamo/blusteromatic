@@ -1,35 +1,41 @@
 <%- model_class = Job -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human %></h1>
-</div>
-
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
-  <dd><%= @job.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:priority) %>:</strong></dt>
-  <dd><%= @job.priority %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
-  <dd><%= @job.status %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:node_status) %>:</strong></dt>
-  <dd><%= @job.node_status %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><%= @job.user_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:filename) %>:</strong></dt>
-  <dd><%= @job.filename %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:job_name) %>:</strong></dt>
-  <dd><%= @job.job_name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:node_id) %>:</strong></dt>
-  <dd><%= @job.node_id %></dd>
-</dl>
-
-<div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              jobs_path, :class => 'btn'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_job_path(@job), :class => 'btn' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
               job_path(@job),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+              :class => 'btn btn-danger btn-mini pull-right' %>
+  <h3><%= @job.name %></h3>
+
 </div>
+
+<table class="table table-bordered">
+  <tr>
+    <th><%= model_class.human_attribute_name(:name) %></th>
+    <th><%= model_class.human_attribute_name(:node) %></th>
+    <th><%= model_class.human_attribute_name(:node_status) %></th>
+    <th><%= model_class.human_attribute_name(:status) %></th>
+    <th><%= model_class.human_attribute_name(:priority) %></th>
+    <th><%= model_class.human_attribute_name(:render_type) %></th>
+    <th><%= model_class.human_attribute_name(:render_frame_start) %></th>
+    <th><%= model_class.human_attribute_name(:render_frame_stop) %></th>
+    <th><%= model_class.human_attribute_name(:render_engine) %></th>
+    <th><%= model_class.human_attribute_name(:compute) %></th>
+  </tr>
+  <tr>
+    <td><%= @job.name %></td>
+    <%- if @job.node %>
+      <td><%= @job.node.name %></td>
+    <% else %>
+      <td></td>
+    <% end %>
+    <td><%= @job.node_status %></td>
+    <td><%= @job.status %></td>
+    <td><%= @job.priority %></td>
+    <td><%= @job.render_type %></td>
+    <td><%= @job.render_frame_start %></td>
+    <td><%= @job.render_frame_stop %></td>
+    <td><%= @job.render_engine %></td>
+    <td><%= @job.compute %></td>
+  </tr>
+</table>

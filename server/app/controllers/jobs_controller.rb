@@ -86,7 +86,26 @@ class JobsController < ApplicationController
   def assign
     @job = Job.find(params[:job_id])
     # find a node compatible with this kind of caracteristics : CPU or GPU, RENDER_ENGINE
-    redirect_to root_url, :notice => "Hope it's good."
+    the_node = nil
+    Node.where(:validated => true).each do |node|
+      # Skip inactive and not alive nodes
+      next if !node.alive?
+      # Skip not matching blender engine
+      next if !node.blender_engines.split(",").include? @job.render_engine
+      # Skip not matching compute capabilities
+      next if !node.compute.split(",").include? @job.compute
+      # If we are here, the node match all points \o/
+      the_node = node
+      break
+    end
+
+    if the_node
+      @job.node = the_node
+      @job.save
+      redirect_to root_url, :notice => "Job assigned to #{the_node.name}."
+    else
+      redirect_to root_url, :notice => "Can't find active node with #{@job.render_engine},#{@job.compute} capabilities."
+    end
   end
 
 end
