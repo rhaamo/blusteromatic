@@ -13,9 +13,12 @@ class Job < ActiveRecord::Base
 
   validates_presence_of :dot_blend, :render_engine, :render_frame_stop, :render_frame_start, :render_type, :priority, :name
   before_validation :compute_hash
+  before_save :save_filename
 
   def compute_hash
     self.md5 = Digest::MD5.hexdigest(self.dot_blend.read)
   end
-
+  def save_filename
+    self.filename = self.dot_blend.file.filename
+  end
 end
