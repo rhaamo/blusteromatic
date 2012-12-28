@@ -7,6 +7,8 @@ Bundler.require
 require "thread"
 require 'net/http'
 require 'json'
+require 'fileutils'
+require 'digest/md5'
 VERSION=0.1
 
 Thread.abort_on_exception = true
@@ -57,6 +59,21 @@ def api_call(type, url, data)
     puts "[#{url}] could not connect to http://#{@config['api_host']}:#{@config['api_port']}"
     return nil
   end
+end
+
+def get_file(md5, filename, local_dir, url, data)
+
+  if File.file? File.join(local_dir, filename)
+    # File exist, check MD5
+    c_md5 = Digest::MD5.hexdigest(File.open(File.join(local_dir, filename), 'r').read)
+    return true if c_md5 == md5
+  end
+
+  Net::HTTP.new(@config['api_host'], @config['api_port']).start { |http|
+    resp = http.get(url)
+    open(File.join(local_dir, filename), "wb") { |file| file.write(resp.body) }
+  }
+  return true
 end
 
 
@@ -110,6 +127,23 @@ th_job_cpu = Thread.new do
     end
 
     puts "[#{@config['api_get_job']}] response : #{cpu_resp[:code]} #{cpu_resp[:message]} : #{cpu_resp[:body]}"
+
+    # filename, local_dir, url, data
+    md5 = cpu_resp[:body]["md5"]
+    filename = cpu_resp[:body]["filename"]
+    local_dir = File.join(@config["local_dl_dir"], cpu_resp[:body]["id"].to_s, "/")
+    url = cpu_resp[:body]["dot_blend"]["url"]
+    data = {}
+
+    FileUtils.mkdir_p(local_dir)
+    dl_file = get_file(md5, filename, local_dir, url, data)
+
+    puts "[get file] got file #{filename}"
+
+    # Now start the render.
+    # 1. generate .py config
+    # 2. start blender
+    # 3. send results to the dispatcher
 
     sleep 10
   end
