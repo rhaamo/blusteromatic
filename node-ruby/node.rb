@@ -9,6 +9,7 @@ require 'net/http'
 require 'json'
 require 'fileutils'
 require 'digest/md5'
+require 'pty'
 VERSION=0.1
 
 Thread.abort_on_exception = true
@@ -91,7 +92,7 @@ th_heartbeat = Thread.new do
       next
     end
 
-    puts "[#{@config['api_heartbeat']}] response : #{hb_resp[:code]} #{hb_resp[:message]} : #{hb_resp[:body]}"
+    #puts "[#{@config['api_heartbeat']}] response : #{hb_resp[:code]} #{hb_resp[:message]} : #{hb_resp[:body]}"
 
     semaphore.synchronize {
       @thread_node_state[:validated] = hb_resp[:body]["validated"]
@@ -141,9 +142,39 @@ th_job_cpu = Thread.new do
     puts "[get file] got file #{filename}"
 
     # Now start the render.
-    # 1. generate .py config
+    # 1. blender config and command line
+    render_filename = File.join(local_dir, filename)
+    cfg = "#{cpu_resp[:body]['render_engine']}_#{cpu_resp[:body]['compute']}.py"
+    cfg_path = File.join(@config['configs'], '/', cfg)
+    framing = "-s #{cpu_resp[:body]['render_frame_start']} -e #{cpu_resp[:body]['render_frame_stop']}"
+    cmd = "-E #{cpu_resp[:body]['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{cpu_resp[:body]['id']}_ -P #{cfg_path} -F PNG #{framing} -a"
     # 2. start blender
-    # 3. send results to the dispatcher
+    puts "Will start blender with #{cmd}"
+    FileUtils.mkdir_p(@config['local_render_dir'])
+    b = File.join(@config['blender_path'], '/', @config['blender_bin'])
+
+    # 3. do the magics!
+    console_log = ""
+    begin
+      PTY.spawn("#{b} #{cmd}") do |stdin, stdout, pid|
+        begin
+          stdin.each { |line|
+            console_log += line
+            elapsed = line.split("|")[3]
+            elapsed = elapsed.strip if elapsed
+            puts elapsed
+
+            infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp[:body]['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
+            l_resp = api_call('post', @config['api_update_job'], infos)
+
+          }
+        rescue Errno::EIO
+          puts "Errno::EIO error, no more output"
+        end
+      end
+    rescue PTY::ChildExited
+      puts "Blender exited!"
+    end
 
     sleep 10
   end
