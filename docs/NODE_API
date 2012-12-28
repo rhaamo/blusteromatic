@@ -26,3 +26,14 @@ Example:
       "hostname"=>"fluttershy",
       "uuid"=>"foobarbazqux",
       "access_token"=>"foobar"}
+
+
+Call to get jobs list for a node CPU or GPU
+
+GET /api/node/get_job
+    make a get with:
+    access_token	: api token
+    compute		: CPU or GPU
+
+Returns JSON:
+    oldest job entered in the dispatcher, full infos
