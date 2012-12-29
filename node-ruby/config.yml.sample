@@ -1,7 +1,13 @@
 api_host: localhost
 api_port: 3000
 api_heartbeat: /api/node/heartbeat
+api_get_job: /api/node/get_job
+api_update_job: /api/node/update_job
+api_finish_job: /api/node/finish_job
 api_token: foobarbazqux
 blender_path: /home/rhaamo/Desktop/blender-2.65a-linux-glibc211-x86_64
 blender_bin: blender
 compute: CPU,GPU
+local_dl_dir: /home/rhaamo/blends/
+local_render_dir: /home/rhaamo/blends/render/
+configs: /home/rhaamo/dev/blusteromatic/node-ruby/confs
