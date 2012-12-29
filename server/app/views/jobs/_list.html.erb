@@ -6,7 +6,6 @@
       <th>Engine</th>
       <th>Compute</th>
       <th>Type</th>
-      <th>Priority</th>
       <th>Node</th>
       <th>Status</th>
       <th>Actions</th>
@@ -25,7 +24,6 @@
             <%= job.render_type %> <%= job.render_frame_start %> - <%= job.render_frame_stop %>
           </td>
         <% end %>
-        <td><%= job.priority %></td>
         <%- if job.node %>
           <td><%= job.node.name %></td>
         <% else %>

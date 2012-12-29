@@ -15,7 +15,6 @@
     <th><%= model_class.human_attribute_name(:node) %></th>
     <th><%= model_class.human_attribute_name(:node_status) %></th>
     <th><%= model_class.human_attribute_name(:status) %></th>
-    <th><%= model_class.human_attribute_name(:priority) %></th>
     <th><%= model_class.human_attribute_name(:render_type) %></th>
     <th><%= model_class.human_attribute_name(:render_frame_start) %></th>
     <th><%= model_class.human_attribute_name(:render_frame_stop) %></th>
@@ -31,7 +30,6 @@
     <% end %>
     <td><%= @job.node_status %></td>
     <td><%= @job.status %></td>
-    <td><%= @job.priority %></td>
     <td><%= @job.render_type %></td>
     <td><%= @job.render_frame_start %></td>
     <td><%= @job.render_frame_stop %></td>
