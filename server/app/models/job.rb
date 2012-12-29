@@ -8,17 +8,23 @@ class Job < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :node
+  has_many :renders
 
   mount_uploader :dot_blend, DotBlendUploader
 
   validates_presence_of :dot_blend, :render_engine, :render_frame_stop, :render_frame_start, :render_type, :priority, :name
   before_validation :compute_hash
   before_save :save_filename
+  before_create :default_status
 
   def compute_hash
     self.md5 = Digest::MD5.hexdigest(self.dot_blend.read)
   end
   def save_filename
     self.filename = self.dot_blend.file.filename
+  end
+  def default_status
+    self.status = "waiting"
+    self.node_status = "waiting"
   end
 end
