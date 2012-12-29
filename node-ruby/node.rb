@@ -147,7 +147,7 @@ th_job_cpu = Thread.new do
     cfg = "#{cpu_resp['render_engine']}_#{cpu_resp['compute']}.py"
     cfg_path = File.join(@config['configs'], '/', cfg)
     framing = "-s #{cpu_resp['render_frame_start']} -e #{cpu_resp['render_frame_stop']}"
-    cmd = "-E #{cpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{cpu_resp['id']}_ -P #{cfg_path} -F PNG #{framing} -a"
+    cmd = "-E #{cpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}render_#{cpu_resp['render_engine']}_#{cpu_resp['compute']}_#{cpu_resp['render_frame_start']}-#{cpu_resp['render_frame_stop']}_id#{cpu_resp['id']}_ -P #{cfg_path} -F PNG #{framing} -a"
     # 2. start blender
     puts "Will start blender with #{cmd}"
     FileUtils.mkdir_p(@config['local_render_dir'])
@@ -181,6 +181,9 @@ th_job_cpu = Thread.new do
     end
 
     # 4. Here we send the final result to the dispatcher : console_log and resulted image / anim
+
+    puts "FINISHED"
+    exit
 
     sleep 10
   end
