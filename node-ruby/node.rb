@@ -210,7 +210,7 @@ th_job_gpu = Thread.new do
       validated = @thread_node_state[:validated]
       paused = @thread_node_state[:paused]
     }
-    if !validated or paused
+    if (validated != 1) or (paused != 0)
       puts "GPU: Node in pause or not validated."
       sleep 10
       next
@@ -224,7 +224,80 @@ th_job_gpu = Thread.new do
       next
     end
 
-    puts "[#{@config['api_get_job']}] response : #{gpu_resp[:code]} #{gpu_resp[:message]} : #{gpu_resp}"
+    puts "[#{@config['api_get_job']}] response : #{gpu_resp}"
+
+    if gpu_resp["error"]
+      puts "[Jobs error] : #{gpu_resp['error']}"
+      sleep 10
+      next
+    end
+
+    # filename, local_dir, url, data
+    md5 = gpu_resp["md5"]
+    filename = gpu_resp["filename"]
+    local_dir = File.join(@config["local_dl_dir"], gpu_resp["id"].to_s, "/")
+    url = gpu_resp["dot_blend"]["url"]
+    data = {}
+
+    FileUtils.mkdir_p(local_dir)
+    dl_file = get_file(md5, filename, local_dir, url, data)
+
+    puts "[get file] got file #{filename}"
+
+    # Now start the render.
+    # 1. blender config and command line
+    render_filename = File.join(local_dir, filename)
+    cfg = "#{gpu_resp['render_engine']}_#{gpu_resp['compute']}.py"
+    cfg_path = File.join(@config['configs'], '/', cfg)
+    framing = "-s #{gpu_resp['render_frame_start']} -e #{gpu_resp['render_frame_stop']}"
+    # output name like "render_CYCLES_GPU_0-0_id4_"
+    output_render_name = "render_#{gpu_resp['render_engine']}_#{gpu_resp['compute']}_#{gpu_resp['render_frame_start']}-#{gpu_resp['render_frame_stop']}_id#{gpu_resp['id']}_"
+    cmd = "-E #{gpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
+    # 2. start blender
+    puts "Will start blender with #{cmd}"
+    FileUtils.mkdir_p(@config['local_render_dir'])
+    b = File.join(@config['blender_path'], '/', @config['blender_bin'])
+
+    # 3. do the magics!
+    console_log = ""
+    tstp_s = Time.now
+    begin
+      PTY.spawn("#{b} #{cmd}") do |stdin, stdout, pid|
+        begin
+          stdin.each { |line|
+            console_log += line
+            elapsed = line.split("|")[3] || "rendering"
+            elapsed = elapsed.strip if elapsed
+
+            if Time.now - tstp_s > 1
+              tstp_s = Time.now
+              infos = {:uuid => @node_blendercfg['uuid'], :job_id => gpu_resp['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
+              l_resp = api_call('post', @config['api_update_job'], infos)
+            end
+
+          }
+        rescue Errno::EIO
+          puts "Errno::EIO error, no more output"
+        end
+      end
+    rescue PTY::ChildExited
+      puts "Blender exited!"
+    end
+
+    # 4. Here we send the final result to the dispatcher : console_log and resulted image / anim
+    # Render file is last line of log "^Saved: (.*) Time: (.*)$"
+    log_saved, log_time = nil
+    console_log.split("\n").each do |line|
+      if line.start_with? "Saved: "
+        m = line.match("^Saved: (.*) Time: (.*)$")
+        log_saved = m[1]
+        log_time = m[2]
+      end
+    end
+
+    puts "Job finished in #{log_time}"
+    infos = {:uuid => @node_blendercfg['uuid'], :job_id => gpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token']}
+    finish_job_resp = api_call('post', @config['api_finish_job'], infos)
 
     sleep 10
   end
