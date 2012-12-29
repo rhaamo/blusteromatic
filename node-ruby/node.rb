@@ -147,7 +147,9 @@ th_job_cpu = Thread.new do
     cfg = "#{cpu_resp['render_engine']}_#{cpu_resp['compute']}.py"
     cfg_path = File.join(@config['configs'], '/', cfg)
     framing = "-s #{cpu_resp['render_frame_start']} -e #{cpu_resp['render_frame_stop']}"
-    cmd = "-E #{cpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}render_#{cpu_resp['render_engine']}_#{cpu_resp['compute']}_#{cpu_resp['render_frame_start']}-#{cpu_resp['render_frame_stop']}_id#{cpu_resp['id']}_ -P #{cfg_path} -F PNG #{framing} -a"
+    # output name like "render_CYCLES_CPU_0-0_id4_"
+    output_render_name = "render_#{cpu_resp['render_engine']}_#{cpu_resp['compute']}_#{cpu_resp['render_frame_start']}-#{cpu_resp['render_frame_stop']}_id#{cpu_resp['id']}_"
+    cmd = "-E #{cpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
     # 2. start blender
     puts "Will start blender with #{cmd}"
     FileUtils.mkdir_p(@config['local_render_dir'])
@@ -161,12 +163,11 @@ th_job_cpu = Thread.new do
         begin
           stdin.each { |line|
             console_log += line
-            elapsed = line.split("|")[3]
+            elapsed = line.split("|")[3] || "rendering"
             elapsed = elapsed.strip if elapsed
 
             if Time.now - tstp_s > 1
               tstp_s = Time.now
-              puts elapsed
               infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
               l_resp = api_call('post', @config['api_update_job'], infos)
             end
@@ -181,9 +182,19 @@ th_job_cpu = Thread.new do
     end
 
     # 4. Here we send the final result to the dispatcher : console_log and resulted image / anim
+    # Render file is last line of log "^Saved: (.*) Time: (.*)$"
+    log_saved, log_time = nil
+    console_log.split("\n").each do |line|
+      if line.start_with? "Saved: "
+        m = line.match("^Saved: (.*) Time: (.*)$")
+        log_saved = m[1]
+        log_time = m[2]
+      end
+    end
 
-    puts "FINISHED"
-    exit
+    puts "Job finished in #{log_time}"
+    infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token']}
+    finish_job_resp = api_call('post', @config['api_finish_job'], infos)
 
     sleep 10
   end
