@@ -96,7 +96,7 @@ th_heartbeat = Thread.new do
 
     semaphore.synchronize {
       @thread_node_state[:validated] = hb_resp[:body]["validated"]
-      @thread_node_state[:paused] = false
+      @thread_node_state[:paused] = hb_resp[:body]["paused"]
       @thread_node_state[:id] = hb_resp[:body]["id"]
     }
     sleep 1
@@ -113,7 +113,7 @@ th_job_cpu = Thread.new do
       validated = @thread_node_state[:validated]
       paused = @thread_node_state[:paused]
     }
-    if !validated or paused
+    if (validated != 1) or (paused != 0)
       puts "CPU: Node in pause or not validated."
       sleep 10
       next
@@ -128,6 +128,12 @@ th_job_cpu = Thread.new do
     end
 
     puts "[#{@config['api_get_job']}] response : #{cpu_resp[:code]} #{cpu_resp[:message]} : #{cpu_resp[:body]}"
+
+    if cpu_resp[:body]["error"]
+      puts "[Jobs error] : #{cpu_resp[:body]['error']}"
+      sleep 10
+      next
+    end
 
     # filename, local_dir, url, data
     md5 = cpu_resp[:body]["md5"]
