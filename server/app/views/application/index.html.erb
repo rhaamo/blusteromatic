@@ -18,6 +18,7 @@
           <th>Compute</th>
           <th>Last ping</th>
           <th>Blender version</th>
+          <th>Paused</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -34,6 +35,7 @@
             <td><%= node.compute %></td>
             <td><%= node.last_ping %></td>
             <td><%= node.blender_version %></td>
+            <td><%= node.paused %></td>
             <td>
               <div class="btn-group">
               <%- if node.validated != 1 %>

@@ -24,6 +24,9 @@ class NodesController < ApplicationController
   end
 
   def pause
-    redirect_to root_url, :notice => "Not currently implemented"
+    @node = Node.find(params[:node_id])
+    @node.paused = (@node.paused == 1 ? 0 : 1)
+    @node.save
+    redirect_to root_url, :notice => "Node paused status have been changed"
   end
 end

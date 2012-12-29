@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121228174346) do
+ActiveRecord::Schema.define(:version => 20121229093411) do
 
   create_table "jobs", :force => true do |t|
     t.string   "name"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(:version => 20121228174346) do
     t.datetime "updated_at",                         :null => false
     t.string   "slug"
     t.string   "compute",         :default => "CPU"
+    t.integer  "paused",          :default => 0
   end
 
   add_index "nodes", ["slug"], :name => "index_nodes_on_slug", :unique => true

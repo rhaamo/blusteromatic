@@ -19,7 +19,7 @@ class Api::NodesController < ApplicationController
       node.name = params[:hostname]
       node.compute = params[:compute]
       node.save
-      hash = {:validated => node.validated, :id => node.id}
+      hash = {:validated => node.validated, :id => node.id, :paused => node.paused}
       render :json => hash.to_json
     end
 
