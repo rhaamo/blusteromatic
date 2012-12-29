@@ -10,6 +10,7 @@ require 'json'
 require 'fileutils'
 require 'digest/md5'
 require 'pty'
+require 'rest_client'
 VERSION=0.1
 
 Thread.abort_on_exception = true
@@ -48,18 +49,11 @@ end
 
 def api_call(type, url, data)
   if type == 'post'
-    req = Net::HTTP::Post.new(url, initheader = {'Content-Type' => 'application/json'})
+    req = RestClient.post "#{@config['api_url']}#{url}", data, :content_type => :json, :accept => :json
   elsif type == 'get'
-    req = Net::HTTP::Get.new(url, initheader = {'Content-Type' => 'application/json'})
+    req = RestClient.get "#{@config['api_url']}#{url}", {:params => data, :accept => :json}
   end
-  req.body = data.to_json
-  begin
-    response = Net::HTTP.new(@config['api_host'], @config['api_port']).start { |http| http.request(req) }
-    return {:code => response.code, :message => response.message, :body => JSON.parse(response.body)}
-  rescue Errno::ECONNREFUSED
-    puts "[#{url}] could not connect to http://#{@config['api_host']}:#{@config['api_port']}"
-    return nil
-  end
+  return JSON.parse(req)
 end
 
 def get_file(md5, filename, local_dir, url, data)
@@ -92,12 +86,12 @@ th_heartbeat = Thread.new do
       next
     end
 
-    #puts "[#{@config['api_heartbeat']}] response : #{hb_resp[:code]} #{hb_resp[:message]} : #{hb_resp[:body]}"
+    #puts "[#{@config['api_heartbeat']}] response : #{hb_resp}"
 
     semaphore.synchronize {
-      @thread_node_state[:validated] = hb_resp[:body]["validated"]
-      @thread_node_state[:paused] = hb_resp[:body]["paused"]
-      @thread_node_state[:id] = hb_resp[:body]["id"]
+      @thread_node_state[:validated] = hb_resp["validated"]
+      @thread_node_state[:paused] = hb_resp["paused"]
+      @thread_node_state[:id] = hb_resp["id"]
     }
     sleep 1
   end
@@ -127,19 +121,19 @@ th_job_cpu = Thread.new do
       next
     end
 
-    puts "[#{@config['api_get_job']}] response : #{cpu_resp[:code]} #{cpu_resp[:message]} : #{cpu_resp[:body]}"
+    puts "[#{@config['api_get_job']}] response : #{cpu_resp}"
 
-    if cpu_resp[:body]["error"]
-      puts "[Jobs error] : #{cpu_resp[:body]['error']}"
+    if cpu_resp["error"]
+      puts "[Jobs error] : #{cpu_resp['error']}"
       sleep 10
       next
     end
 
     # filename, local_dir, url, data
-    md5 = cpu_resp[:body]["md5"]
-    filename = cpu_resp[:body]["filename"]
-    local_dir = File.join(@config["local_dl_dir"], cpu_resp[:body]["id"].to_s, "/")
-    url = cpu_resp[:body]["dot_blend"]["url"]
+    md5 = cpu_resp["md5"]
+    filename = cpu_resp["filename"]
+    local_dir = File.join(@config["local_dl_dir"], cpu_resp["id"].to_s, "/")
+    url = cpu_resp["dot_blend"]["url"]
     data = {}
 
     FileUtils.mkdir_p(local_dir)
@@ -150,10 +144,10 @@ th_job_cpu = Thread.new do
     # Now start the render.
     # 1. blender config and command line
     render_filename = File.join(local_dir, filename)
-    cfg = "#{cpu_resp[:body]['render_engine']}_#{cpu_resp[:body]['compute']}.py"
+    cfg = "#{cpu_resp['render_engine']}_#{cpu_resp['compute']}.py"
     cfg_path = File.join(@config['configs'], '/', cfg)
-    framing = "-s #{cpu_resp[:body]['render_frame_start']} -e #{cpu_resp[:body]['render_frame_stop']}"
-    cmd = "-E #{cpu_resp[:body]['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{cpu_resp[:body]['id']}_ -P #{cfg_path} -F PNG #{framing} -a"
+    framing = "-s #{cpu_resp['render_frame_start']} -e #{cpu_resp['render_frame_stop']}"
+    cmd = "-E #{cpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{cpu_resp['id']}_ -P #{cfg_path} -F PNG #{framing} -a"
     # 2. start blender
     puts "Will start blender with #{cmd}"
     FileUtils.mkdir_p(@config['local_render_dir'])
@@ -161,6 +155,7 @@ th_job_cpu = Thread.new do
 
     # 3. do the magics!
     console_log = ""
+    tstp_s = Time.now
     begin
       PTY.spawn("#{b} #{cmd}") do |stdin, stdout, pid|
         begin
@@ -168,10 +163,13 @@ th_job_cpu = Thread.new do
             console_log += line
             elapsed = line.split("|")[3]
             elapsed = elapsed.strip if elapsed
-            puts elapsed
 
-            infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp[:body]['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
-            l_resp = api_call('post', @config['api_update_job'], infos)
+            if Time.now - tstp_s > 1
+              tstp_s = Time.now
+              puts elapsed
+              infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
+              l_resp = api_call('post', @config['api_update_job'], infos)
+            end
 
           }
         rescue Errno::EIO
@@ -181,6 +179,8 @@ th_job_cpu = Thread.new do
     rescue PTY::ChildExited
       puts "Blender exited!"
     end
+
+    # 4. Here we send the final result to the dispatcher : console_log and resulted image / anim
 
     sleep 10
   end
@@ -210,7 +210,7 @@ th_job_gpu = Thread.new do
       next
     end
 
-    puts "[#{@config['api_get_job']}] response : #{gpu_resp[:code]} #{gpu_resp[:message]} : #{gpu_resp[:body]}"
+    puts "[#{@config['api_get_job']}] response : #{gpu_resp[:code]} #{gpu_resp[:message]} : #{gpu_resp}"
 
     sleep 10
   end
