@@ -2,3 +2,4 @@ Blusteromatic - Blender Cluster o'matic render manager.
 
 
 server/		server part, the web manager.
+node-ruby/	a node, un ruby
