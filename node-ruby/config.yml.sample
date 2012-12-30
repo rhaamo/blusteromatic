@@ -1,5 +1,6 @@
 api_host: localhost
 api_port: 3000
+api_url: http://localhost:3000
 api_heartbeat: /api/node/heartbeat
 api_get_job: /api/node/get_job
 api_update_job: /api/node/update_job
