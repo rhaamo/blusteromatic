@@ -16,6 +16,8 @@ VERSION=0.1
 Thread.abort_on_exception = true
 semaphore = Mutex.new
 
+trap("SIGINT") { end_of_the_world }
+
 case RUBY_PLATFORM
   when /win32/
     require './specific_win'
@@ -44,8 +46,15 @@ end
 @node_blendercfg['uuid'] = get_uuid
 @node_blendercfg['compute'] = @config['compute']
 
-@thread_node_state = {:validated => false, :paused => false} # set default values
+@thread_node_state = {:validated => false, :paused => false, :pid_cpu => nil, :pid_gpu => nil} # set default values
 
+def end_of_the_world
+  puts "Catched ctrl c"
+  puts "PID CPU: #{@thread_node_state[:pid_cpu]} ; PID GPU: #{@thread_node_state[:pid_gpu]}"
+  Process.kill("SIGTERM", @thread_node_state[:pid_cpu]) if @thread_node_state[:pid_cpu]
+  Process.kill("SIGTERM", @thread_node_state[:pid_gpu]) if @thread_node_state[:pid_gpu]
+  exit
+end
 
 def api_call(type, url, data)
   if type == 'post'
@@ -166,10 +175,15 @@ th_job_cpu = Thread.new do
             elapsed = line.split("|")[3] || "rendering"
             elapsed = elapsed.strip if elapsed
 
+            semaphore.synchronize {
+              @thread_node_state[:pid_cpu] = pid
+            }
+
             if Time.now - tstp_s > 1
               tstp_s = Time.now
               infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
               l_resp = api_call('post', @config['api_update_job'], infos)
+              puts "Ctrl c catched: #{@thread_node_state[:ctrl_c]}"
             end
 
           }
@@ -273,6 +287,7 @@ th_job_gpu = Thread.new do
               tstp_s = Time.now
               infos = {:uuid => @node_blendercfg['uuid'], :job_id => gpu_resp['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
               l_resp = api_call('post', @config['api_update_job'], infos)
+              puts "Ctrl c catched: #{@thread_node_state[:ctrl_c]}"
             end
 
           }
@@ -283,6 +298,10 @@ th_job_gpu = Thread.new do
     rescue PTY::ChildExited
       puts "Blender exited!"
     end
+
+    semaphore.synchronize {
+      @thread_node_state[:pid_gpu] = nil
+    }
 
     # 4. Here we send the final result to the dispatcher : console_log and resulted image / anim
     # Render file is last line of log "^Saved: (.*) Time: (.*)$"
