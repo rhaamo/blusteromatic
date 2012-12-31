@@ -58,6 +58,7 @@ class Api::NodesController < ApplicationController
     r.job_id = job.id
     r.filename = params[:filename]
     r.output = params[:output_file]
+    r.render_time = params[:render_time]
 
     r.save
     job.save

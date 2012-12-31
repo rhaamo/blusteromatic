@@ -207,7 +207,7 @@ th_job_cpu = Thread.new do
     end
 
     puts "Job finished in #{log_time}"
-    infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token']}
+    infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token'], :render_time => log_time}
     finish_job_resp = api_call('post', @config['api_finish_job'], infos)
 
     sleep 10
@@ -315,7 +315,7 @@ th_job_gpu = Thread.new do
     end
 
     puts "Job finished in #{log_time}"
-    infos = {:uuid => @node_blendercfg['uuid'], :job_id => gpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token']}
+    infos = {:uuid => @node_blendercfg['uuid'], :job_id => gpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token'], render_time => log_time}
     finish_job_resp = api_call('post', @config['api_finish_job'], infos)
 
     sleep 10

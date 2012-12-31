@@ -7,6 +7,7 @@
       <th>Compute</th>
       <th>Type</th>
       <th>Node</th>
+      <th>Render Time</th>
       <th>Status</th>
       <th>Actions</th>
     </tr>
@@ -29,6 +30,7 @@
         <% else %>
           <td>N/A</td>
         <% end %>
+        <td><%= job.renders.last.render_time if job.renders.last %></td>
         <td>
           Job: <%= job.status || "N/A" %><br />
           Node: <%= job.node_status || "N/A" %>
