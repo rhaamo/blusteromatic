@@ -1,0 +1,31 @@
+upstream unicorn_bluster {
+	server unix:/home/blusteromatic/blusteromatic.sock fail_timeout=0;
+}
+
+server {
+	listen 80;
+	server_name blender.sigpipe.me _;
+	access_log /var/log/nginx/blender.sigpipe.me.access.log;
+
+	client_max_body_size 100M;
+
+	keepalive_timeout 5;
+
+	root /home/blusteromatic/blusteromatic/server/public;
+
+	location / {
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_redirect off;
+		if (!-f $request_filename) {
+			proxy_pass http://unicorn_bluster;
+			break;
+		}
+	}
+
+	error_page 500 502 503 504 /500.html;
+	location = /500.html {
+		root /home/blusteromatic/blusteromatic/server/public;
+	}
+}
+
