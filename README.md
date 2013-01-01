@@ -5,7 +5,11 @@ Blusteromatic
 
     Blusteromatic is a remote renderer for blender files. Just upload a blend file, configure it, and render it!
 
-2.  Features
+2.  Screenshot
+
+    ![blusteromatic screenshot](https://raw.github.com/rhaamo/blusteromatic/master/docs/screenshot.png)
+
+3.  Features
 
   * Blend file upload
   * Nodes assignment based on render type and engine
@@ -14,7 +18,7 @@ Blusteromatic
   * Support for custom blender-python file
   * Support for any render engine supported by blender
     
-3.  Installation
+4.  Installation
 
     We are assuming the following infos about the installation:
     
@@ -22,7 +26,7 @@ Blusteromatic
   * Nginx will be used, and the dispatcher run under unicorn
   * RVM will be used for the ruby
 
-3. 1.  Prerequirements
+4. 1.  Prerequirements
 
     ```
     # = root
@@ -46,7 +50,7 @@ Blusteromatic
      $ rake tmp:create
     ```
     
-3. 2.  Unicorn / nginx
+4. 2.  Unicorn / nginx
 
     ```
      $ cd ~/blusteromatic/
@@ -60,7 +64,7 @@ Blusteromatic
      Edit /etc/nginx/sites-enabled/nginx_blusteromatic with your options
     ```
 
-3. 3.  Node
+4. 3.  Node
 
     ```
      # apt-get install screen
@@ -76,11 +80,11 @@ Blusteromatic
      Ctrl-a d to detach screen, etc... See manpage for screen.
     ```
     
-4.  License
+5.  License
 
   * Blusteromatic is licensed under the MIT license.
   * node-ruby is licensed under the MIT license.
 
-5.  Contact
-  
+6.  Contact
+ 
     Rhaamo : rhaamo *at* sigpipe *dot* me
