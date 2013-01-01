@@ -130,10 +130,10 @@ th_job_cpu = Thread.new do
       next
     end
 
-    puts "[#{@config['api_get_job']}] response : #{cpu_resp}"
+    puts "[CPU][#{@config['api_get_job']}] response : #{cpu_resp}"
 
     if cpu_resp["error"]
-      puts "[Jobs error] : #{cpu_resp['error']}"
+      puts "[CPU][Jobs error] : #{cpu_resp['error']}"
       sleep 10
       next
     end
@@ -148,7 +148,7 @@ th_job_cpu = Thread.new do
     FileUtils.mkdir_p(local_dir)
     dl_file = get_file(md5, filename, local_dir, url, data)
 
-    puts "[get file] got file #{filename}"
+    puts "[CPU][get file] got file #{filename}"
 
     # Now start the render.
     # 1. blender config and command line
@@ -160,7 +160,7 @@ th_job_cpu = Thread.new do
     output_render_name = "render_#{cpu_resp['render_engine']}_#{cpu_resp['compute']}_#{cpu_resp['render_frame_start']}-#{cpu_resp['render_frame_stop']}_id#{cpu_resp['id']}_"
     cmd = "-E #{cpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
     # 2. start blender
-    puts "Will start blender with #{cmd}"
+    puts "CPU Will start blender with #{cmd}"
     FileUtils.mkdir_p(@config['local_render_dir'])
     b = File.join(@config['blender_path'], '/', @config['blender_bin'])
 
@@ -183,7 +183,6 @@ th_job_cpu = Thread.new do
               tstp_s = Time.now
               infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
               l_resp = api_call('post', @config['api_update_job'], infos)
-              puts "Ctrl c catched: #{@thread_node_state[:ctrl_c]}"
             end
 
           }
@@ -206,7 +205,7 @@ th_job_cpu = Thread.new do
       end
     end
 
-    puts "Job finished in #{log_time}"
+    puts "CPU Job finished in #{log_time}"
     infos = {:uuid => @node_blendercfg['uuid'], :job_id => cpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token'], :render_time => log_time}
     finish_job_resp = api_call('post', @config['api_finish_job'], infos)
 
@@ -238,10 +237,10 @@ th_job_gpu = Thread.new do
       next
     end
 
-    puts "[#{@config['api_get_job']}] response : #{gpu_resp}"
+    puts "[GPU][#{@config['api_get_job']}] response : #{gpu_resp}"
 
     if gpu_resp["error"]
-      puts "[Jobs error] : #{gpu_resp['error']}"
+      puts "[GPU][Jobs error] : #{gpu_resp['error']}"
       sleep 10
       next
     end
@@ -256,7 +255,7 @@ th_job_gpu = Thread.new do
     FileUtils.mkdir_p(local_dir)
     dl_file = get_file(md5, filename, local_dir, url, data)
 
-    puts "[get file] got file #{filename}"
+    puts "[GPU][get file] got file #{filename}"
 
     # Now start the render.
     # 1. blender config and command line
@@ -268,7 +267,7 @@ th_job_gpu = Thread.new do
     output_render_name = "render_#{gpu_resp['render_engine']}_#{gpu_resp['compute']}_#{gpu_resp['render_frame_start']}-#{gpu_resp['render_frame_stop']}_id#{gpu_resp['id']}_"
     cmd = "-E #{gpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
     # 2. start blender
-    puts "Will start blender with #{cmd}"
+    puts "GPU Will start blender with #{cmd}"
     FileUtils.mkdir_p(@config['local_render_dir'])
     b = File.join(@config['blender_path'], '/', @config['blender_bin'])
 
@@ -287,7 +286,6 @@ th_job_gpu = Thread.new do
               tstp_s = Time.now
               infos = {:uuid => @node_blendercfg['uuid'], :job_id => gpu_resp['id'], :console_log => console_log, :job_status => elapsed, :node_status => 'rendering', :access_token => @config['api_token']}
               l_resp = api_call('post', @config['api_update_job'], infos)
-              puts "Ctrl c catched: #{@thread_node_state[:ctrl_c]}"
             end
 
           }
@@ -314,7 +312,7 @@ th_job_gpu = Thread.new do
       end
     end
 
-    puts "Job finished in #{log_time}"
+    puts "GPU Job finished in #{log_time}"
     infos = {:uuid => @node_blendercfg['uuid'], :job_id => gpu_resp['id'], :console_log => console_log, :output_file => File.new(log_saved, "rb"), :filename => File.basename(log_saved), :access_token => @config['api_token'], render_time => log_time}
     finish_job_resp = api_call('post', @config['api_finish_job'], infos)
 
