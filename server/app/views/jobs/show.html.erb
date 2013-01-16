@@ -5,6 +5,10 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger btn-mini pull-right' %>
+  <%- if !job.node %>
+    <%= link_to "assign", job_assign_url(job), :class => "btn btn-mini btn-success" %>
+  <% end %>
+
   <h3><%= @job.name %></h3>
 
 </div>
