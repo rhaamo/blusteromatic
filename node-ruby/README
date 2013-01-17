@@ -1,3 +1,12 @@
 A node in ruby
 
 Fully working ruby node for blusteromatic.
+
+Init script:
+	# cp init_script /etc/init.d/blusteromatic_node
+	# chmod +x !$
+
+Redhat:		chkconfig --level 345 blusteromatic_node on
+Debian/ubuntu:	update-rc.d -f blusteromatic_node defaults
+Gentoo:		rc-update add blusteromatic_node default
+
