@@ -47,7 +47,12 @@
     </div>
   </div>
 
-
+  <div class="control-group">
+    <%= f.label :blender_config_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :blender_config_id, BlenderConfig.all, :id, :name, :class => "number_field", :include_blank => true %>
+    </div>
+  </div>
 
 
 
