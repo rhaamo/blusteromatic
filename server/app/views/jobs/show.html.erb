@@ -59,12 +59,23 @@
   </div>
 
   <div class="tab-pane" id="renders">
+    &raquo; <%= link_to "Show all renders", job_renders_url(@job) %>
+    <br />
+    <br />
     <ul class="thumbnails">
-      <%- @job.renders.each do |r| %>
-        <li class="span4">
-          <a href="<%= r.output %>" class="thumbnail">
-            <img src="<%= r.output %>" alt="<%= r.filename %>" />
-          </a>
+      <%- @job.renders.order("created_at DESC").limit(5).each do |r| %>
+        <li class="span3">
+          <div class="thumbnail">
+            <%= r.id %> - <%= r.created_at %>
+            <a href="<%= r.output %>">
+              <img src="<%= r.output %>" alt="<%= r.filename %>" />
+            </a>
+            <p>
+              Render time: <%= r.render_time %>
+              <br />
+              <%= link_to "Show render with log", job_render_url(@job, r), :class => "btn btn-mini" %>
+            </p>
+          </div>
         </li>
       <% end %>
     </ul>

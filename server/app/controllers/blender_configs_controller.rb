@@ -1,4 +1,6 @@
 class BlenderConfigsController < ApplicationController
+  before_filter :authenticate_user!
+
   # GET /blender_configs
   # GET /blender_configs.json
   def index

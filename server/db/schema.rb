@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130119144551) do
+ActiveRecord::Schema.define(:version => 20130119193358) do
 
   create_table "blender_configs", :force => true do |t|
     t.string   "name"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(:version => 20130119144551) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
     t.string   "render_time"
+    t.text     "console_log"
   end
 
   create_table "users", :force => true do |t|

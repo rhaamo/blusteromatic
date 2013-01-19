@@ -1,0 +1,27 @@
+<%- model_class = Render -%>
+<div class="page-header">
+  <h3>Render of <%= link_to @job.name, @job %> in <%= @render.render_time %> on
+  <%= @render.created_at %></h3>
+</div>
+
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#render" data-toggle="tab">Render output</a></li>
+  <li><a href="#console" data-toggle="tab">Render console log</a></li>
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane active" id="render">
+    <a href="<%= @render.output.url %>">
+      <img src="<%= @render.output.url %>" />
+    </a>
+
+    <div class="form-actions">
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+          job_renders_path(@job), :class => 'btn'  %>
+    </div>
+  </div>
+
+  <div class="tab-pane" id="console">
+    <pre><%= @render.console_log || "Nothing" %></pre>
+  </div>
+</div>

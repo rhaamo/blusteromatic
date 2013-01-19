@@ -1,0 +1,25 @@
+<%- model_class = Render -%>
+<div class="page-header">
+  <h3>Renders for <%= @job.name %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:output) %></th>
+      <th><%= model_class.human_attribute_name(:render_time) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @renders.each do |render| %>
+      <tr>
+        <td><%= link_to render.id, job_render_path(@job, render) %></td>
+        <td><%= link_to "Output", render.output.url %></td>
+        <td><%= render.render_time %></td>
+        <td><%=l render.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

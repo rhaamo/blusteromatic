@@ -60,6 +60,7 @@ class Api::NodesController < ApplicationController
     r.filename = params[:filename]
     r.output = params[:output_file]
     r.render_time = params[:render_time]
+    r.console_log = params[:console_log]
 
     r.save
     job.save
