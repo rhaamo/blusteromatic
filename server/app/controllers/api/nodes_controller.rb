@@ -30,9 +30,10 @@ class Api::NodesController < ApplicationController
 
     if !job
       job = {:error => "No jobs available"}
+      return render :json => job.to_json
     end
 
-    render :json => job.to_json
+    render :json => {:job => job, :config => job.blender_config}.to_json
   end
 
   def update_job

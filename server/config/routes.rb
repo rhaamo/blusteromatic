@@ -9,7 +9,9 @@ Blusteromatic::Application.routes.draw do
     end
   end
 
-  resources :blender_configs
+  resources :blender_configs do
+    get :clone
+  end
 
   resources :jobs do
     get :assign

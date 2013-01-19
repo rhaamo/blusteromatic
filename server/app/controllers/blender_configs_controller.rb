@@ -32,6 +32,19 @@ class BlenderConfigsController < ApplicationController
     end
   end
 
+  def clone
+    @blender_config = BlenderConfig.new
+    clone = BlenderConfig.find(params[:blender_config_id])
+    @blender_config.name = clone.name
+    @blender_config.description = clone.description
+    @blender_config.config = clone.config
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @blender_config }
+    end
+  end
+
   # GET /blender_configs/1/edit
   def edit
     @blender_config = BlenderConfig.find(params[:id])

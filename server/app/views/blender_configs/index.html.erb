@@ -15,6 +15,9 @@
         <td><%= link_to blender_config.name, blender_config_path(blender_config) %></td>
         <td><%= blender_config.description %></td>
         <td>
+          <%= link_to t('clone and edit', :default => t("helpers.links.clone_and_edit")),
+                      blender_config_clone_path(blender_config),
+                      :class => 'btn btn-mini' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_blender_config_path(blender_config), :class => 'btn btn-mini' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
