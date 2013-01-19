@@ -47,12 +47,15 @@
 <ul class="nav nav-tabs">
   <li class="active"><a href="#console" data-toggle="tab">Console</a></li>
   <li><a href="#renders" data-toggle="tab">Render outputs</a></li>
+  <li><a href="#emergency" data-toggle="tab">Emergency</a></li>
 </ul>
 
 <div class="tab-content">
+
   <div class="tab-pane active" id="console">
     <pre><%= @job.log || "No log right now." %></pre>
   </div>
+
   <div class="tab-pane" id="renders">
     <ul class="thumbnails">
       <%- @job.renders.each do |r| %>
@@ -64,4 +67,21 @@
       <% end %>
     </ul>
   </div>
+
+  <div class="tab-pane" id="emergency">
+
+    If the job isn't updating anymore : please check on the node side
+    ! and if the node is really crashed, you can reset here the
+    status.
+
+    <br /><br />
+
+    <%= link_to t('Reset statues', :default => t("helpers.links.reset_statues")),
+        job_reset_url(@job),
+        :data => { :confirm => t('.confirm', :default =>
+        t("helpers.links.confirm_reset_job", :default => 'Are you REALLY sure? This can lead to serious problems with your job !')) },
+        :class => 'btn btn-danger btn-mini' %>
+
+  </div>
+
 </div>

@@ -116,4 +116,12 @@ class JobsController < ApplicationController
     end
   end
 
+  def reset
+    @job = Job.find(params[:job_id])
+    @job.default_status
+    @job.node = nil
+    @job.save
+    redirect_to @job
+  end
+
 end

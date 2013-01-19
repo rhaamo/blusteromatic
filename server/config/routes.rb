@@ -12,6 +12,7 @@ Blusteromatic::Application.routes.draw do
   resources :jobs do
     get :assign
     get :reassign
+    get :reset
   end
 
   devise_for :users
