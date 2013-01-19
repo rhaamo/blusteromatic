@@ -267,6 +267,19 @@ Forever.run do
           end
         end
 
+        if !log_saved or !log_time
+          # error !
+          infos_cpu = {
+            :uuid => @node_blendercfg['uuid'],
+            :job_id => cpu_resp['id'],
+            :console_log => console_log,
+            :access_token => @config['api_token'],
+            :error => "Catched SIGINT"
+          }
+          cpu_error_job_resp = api_call('post', @config['api_error_job'], infos_cpu)
+          break
+        end
+
         puts "CPU Job finished in #{log_time}"
         infos = {
           :uuid => @node_blendercfg['uuid'],
@@ -403,6 +416,19 @@ Forever.run do
             log_saved = m[1]
             log_time = m[2]
           end
+        end
+
+        if !log_saved or !log_time
+          # error !
+          infos_gpu = {
+            :uuid => @node_blendercfg['uuid'],
+            :job_id => gpu_resp['id'],
+            :console_log => console_log,
+            :access_token => @config['api_token'],
+            :error => "Catched SIGINT"
+          }
+          gpu_error_job_resp = api_call('post', @config['api_error_job'], infos_gpu)
+          break
         end
 
         puts "GPU Job finished in #{log_time}"

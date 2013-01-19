@@ -69,7 +69,7 @@ class Api::NodesController < ApplicationController
     # Got job error, just put node_status as error, and status as finished
     node = Node.find_by_uuid(params[:uuid])
     job = Job.find_by_node_id_and_id(node.id, params[:job_id])
-    #job.log = "Error."
+    job.log = params[:console_log] if params[:console_log]
     job.status = "finished"
     job.node_status = "error"
     job.save
