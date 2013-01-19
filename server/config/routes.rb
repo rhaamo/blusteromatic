@@ -9,6 +9,8 @@ Blusteromatic::Application.routes.draw do
     end
   end
 
+  resources :blender_configs
+
   resources :jobs do
     get :assign
     get :reassign

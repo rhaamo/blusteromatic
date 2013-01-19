@@ -9,6 +9,7 @@ class Job < ActiveRecord::Base
   belongs_to :user
   belongs_to :node
   has_many :renders
+  has_one :blender_config
 
   mount_uploader :dot_blend, DotBlendUploader
 

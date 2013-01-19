@@ -11,7 +11,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121231185803) do
+ActiveRecord::Schema.define(:version => 20130119144551) do
+
+  create_table "blender_configs", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.text     "config"
+    t.string   "slug"
+    t.integer  "user_id"
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+    t.boolean  "public",      :default => false
+  end
 
   create_table "jobs", :force => true do |t|
     t.string   "name"
@@ -33,6 +44,7 @@ ActiveRecord::Schema.define(:version => 20121231185803) do
     t.string   "compute",            :default => "CPU"
     t.string   "md5"
     t.text     "log"
+    t.integer  "blender_config_id"
   end
 
   add_index "jobs", ["slug"], :name => "index_jobs_on_slug", :unique => true
@@ -64,20 +76,20 @@ ActiveRecord::Schema.define(:version => 20121231185803) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",                    :default => "", :null => false
+    t.string   "email",                  :default => "", :null => false
+    t.string   "encrypted_password",     :default => "", :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                         :default => 0
+    t.integer  "sign_in_count",          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.string   "authentication_token"
-    t.datetime "created_at",                                            :null => false
-    t.datetime "updated_at",                                            :null => false
-    t.string   "login",                  :limit => nil
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.string   "login"
     t.string   "slug"
   end
 
