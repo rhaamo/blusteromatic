@@ -64,8 +64,35 @@ Forever.run do
     def end_of_the_world
       puts "Catched ctrl c"
       puts "PID CPU: #{@thread_node_state[:pid_cpu]} ; PID GPU: #{@thread_node_state[:pid_gpu]}"
+      @thread_node_state[:stop_now] = true
       Process.kill("SIGTERM", @thread_node_state[:pid_cpu]) if @thread_node_state[:pid_cpu]
       Process.kill("SIGTERM", @thread_node_state[:pid_gpu]) if @thread_node_state[:pid_gpu]
+
+      puts "Sending job state"
+
+      if @thread_node_state[:cpu_job_infos]
+        infos_cpu = {
+          :uuid => @node_blendercfg['uuid'],
+          :job_id => @thread_node_state[:cpu_job_infos][:job_id],
+          #:console_log => console_log,
+          :access_token => @config['api_token'],
+          :error => "Catched SIGINT"
+        }
+        cpu_error_job_resp = api_call('post', @config['api_error_job'], infos_cpu)
+      end
+      if @thread_node_state[:gpu_job_infos]
+        infos_gpu = {
+          :uuid => @node_blendercfg['uuid'],
+          :job_id => @thread_node_state[:gpu_job_infos][:job_id],
+          #:console_log => console_log,
+          :access_token => @config['api_token'],
+          :error => "Catched SIGINT"
+        }
+        gpu_error_job_resp = api_call('post', @config['api_error_job'], infos_gpu)
+      end
+
+      puts "Exiting"
+
       exit
     end
 
@@ -181,20 +208,24 @@ Forever.run do
         FileUtils.mkdir_p(@config['local_render_dir'])
         b = File.join(@config['blender_path'], '/', @config['blender_bin'])
 
+        semaphore.synchronize{
+          @thread_node_state[:cpu_job_infos] = {:job_id => cpu_resp['id']}
+        }
+
         # 3. do the magics!
         console_log = ""
         tstp_s = Time.now
         begin
           PTY.spawn("#{b} #{cmd}") do |stdin, stdout, pid|
             begin
+              semaphore.synchronize {
+                @thread_node_state[:pid_cpu] = pid
+              }
+
               stdin.each { |line|
                 console_log += line
                 elapsed = line.split("|")[3] || "rendering"
                 elapsed = elapsed.strip if elapsed
-
-                semaphore.synchronize {
-                  @thread_node_state[:pid_cpu] = pid
-                }
 
                 if Time.now - tstp_s > 1
                   tstp_s = Time.now
@@ -217,6 +248,13 @@ Forever.run do
         rescue PTY::ChildExited
           puts "Blender exited!"
         end
+
+        is_stopped = false
+        semaphore.synchronize {
+          puts "Exiting CPU thread." if @thread_node_state[:stop_now]
+          is_stopped = @thread_node_state[:stop_now]
+        }
+        break if is_stopped
 
         # 4. Here we send the final result to the dispatcher : console_log and resulted image / anim
         # Render file is last line of log "^Saved: (.*) Time: (.*)$"
@@ -307,12 +345,21 @@ Forever.run do
         FileUtils.mkdir_p(@config['local_render_dir'])
         b = File.join(@config['blender_path'], '/', @config['blender_bin'])
 
+        semaphore.synchronize{
+          @thread_node_state[:gpu_job_infos] = {:job_id => gpu_resp['id']}
+        }
+
         # 3. do the magics!
         console_log = ""
         tstp_s = Time.now
         begin
           PTY.spawn("#{b} #{cmd}") do |stdin, stdout, pid|
             begin
+
+              semaphore.synchronize {
+                @thread_node_state[:pid_gpu] = pid
+              }
+
               stdin.each { |line|
                 console_log += line
                 elapsed = line.split("|")[3] || "rendering"
@@ -340,9 +387,12 @@ Forever.run do
           puts "Blender exited!"
         end
 
+        is_stopped = false
         semaphore.synchronize {
-          @thread_node_state[:pid_gpu] = nil
+          puts "Exiting GPU thread." if @thread_node_state[:stop_now]
+          is_stopped = @thread_node_state[:stop_now]
         }
+        break if is_stopped
 
         # 4. Here we send the final result to the dispatcher : console_log and resulted image / anim
         # Render file is last line of log "^Saved: (.*) Time: (.*)$"

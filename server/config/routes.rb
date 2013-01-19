@@ -5,6 +5,7 @@ Blusteromatic::Application.routes.draw do
       get "get_job"
       post "update_job"
       post "finish_job"
+      post "error_job"
     end
   end
 

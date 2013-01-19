@@ -65,6 +65,17 @@ class Api::NodesController < ApplicationController
     render :json => {:status => 'ok'}
   end
 
+  def error_job
+    # Got job error, just put node_status as error, and status as finished
+    node = Node.find_by_uuid(params[:uuid])
+    job = Job.find_by_node_id_and_id(node.id, params[:job_id])
+    #job.log = "Error."
+    job.status = "finished"
+    job.node_status = "error"
+    job.save
+    render :json => {:status => 'ok'}
+  end
+
   private
   def restrict_access
     api_key = (Settings.api_token == params[:access_token])
