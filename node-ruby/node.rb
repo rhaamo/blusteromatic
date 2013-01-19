@@ -182,11 +182,14 @@ Forever.run do
           next
         end
 
+        c_job = cpu_resp["job"]
+        c_config = cpu_resp["config"]
+
         # filename, local_dir, url, data
-        md5 = cpu_resp["md5"]
-        filename = cpu_resp["filename"]
-        local_dir = File.join(@config["local_dl_dir"], cpu_resp["id"].to_s, "/")
-        url = cpu_resp["dot_blend"]["url"]
+        md5 = c_job["md5"]
+        filename = c_job["filename"]
+        local_dir = File.join(@config["local_dl_dir"], c_job["id"].to_s, "/")
+        url = c_job["dot_blend"]["url"]
         data = {}
 
         FileUtils.mkdir_p(local_dir)
@@ -197,19 +200,25 @@ Forever.run do
         # Now start the render.
         # 1. blender config and command line
         render_filename = File.join(local_dir, filename)
-        cfg = "#{cpu_resp['render_engine']}_#{cpu_resp['compute']}.py"
-        cfg_path = File.join(@config['configs'], '/', cfg)
-        framing = "-s #{cpu_resp['render_frame_start']} -e #{cpu_resp['render_frame_stop']}"
+        cfg = "#{c_config['id']}.py"
+        cfg_path = File.join(local_dir, '/', cfg)
+
+        # Wrote config to file
+        ff = File.new(cfg_path, "w")
+        ff.write(c_config["config"])
+        ff.close
+
+        framing = "-s #{c_job['render_frame_start']} -e #{c_job['render_frame_stop']}"
         # output name like "render_CYCLES_CPU_0-0_id4_"
-        output_render_name = "render_#{cpu_resp['render_engine']}_#{cpu_resp['compute']}_#{cpu_resp['render_frame_start']}-#{cpu_resp['render_frame_stop']}_id#{cpu_resp['id']}_"
-        cmd = "-E #{cpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
+        output_render_name = "render_#{c_job['render_engine']}_#{c_job['compute']}_#{c_job['render_frame_start']}-#{c_job['render_frame_stop']}_id#{c_job['id']}_"
+        cmd = "-E #{c_job['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
         # 2. start blender
         puts "CPU Will start blender with #{cmd}"
         FileUtils.mkdir_p(@config['local_render_dir'])
         b = File.join(@config['blender_path'], '/', @config['blender_bin'])
 
         semaphore.synchronize{
-          @thread_node_state[:cpu_job_infos] = {:job_id => cpu_resp['id']}
+          @thread_node_state[:cpu_job_infos] = {:job_id => c_job['id']}
         }
 
         # 3. do the magics!
@@ -231,7 +240,7 @@ Forever.run do
                   tstp_s = Time.now
                   infos = {
                     :uuid => @node_blendercfg['uuid'],
-                    :job_id => cpu_resp['id'],
+                    :job_id => c_job['id'],
                     :console_log => console_log,
                     :job_status => elapsed,
                     :node_status => 'rendering',
@@ -271,7 +280,7 @@ Forever.run do
           # error !
           infos_cpu = {
             :uuid => @node_blendercfg['uuid'],
-            :job_id => cpu_resp['id'],
+            :job_id => c_job['id'],
             :console_log => console_log,
             :access_token => @config['api_token'],
             :error => "Catched SIGINT"
@@ -283,7 +292,7 @@ Forever.run do
         puts "CPU Job finished in #{log_time}"
         infos = {
           :uuid => @node_blendercfg['uuid'],
-          :job_id => cpu_resp['id'],
+          :job_id => c_job['id'],
           :console_log => console_log,
           :output_file => File.new(log_saved, "rb"),
           :filename => File.basename(log_saved),
@@ -332,11 +341,14 @@ Forever.run do
           next
         end
 
+        c_job = gpu_resp["job"]
+        c_config = gpu_resp["config"]
+
         # filename, local_dir, url, data
-        md5 = gpu_resp["md5"]
-        filename = gpu_resp["filename"]
-        local_dir = File.join(@config["local_dl_dir"], gpu_resp["id"].to_s, "/")
-        url = gpu_resp["dot_blend"]["url"]
+        md5 = c_job["md5"]
+        filename = c_job["filename"]
+        local_dir = File.join(@config["local_dl_dir"], c_job["id"].to_s, "/")
+        url = c_job["dot_blend"]["url"]
         data = {}
 
         FileUtils.mkdir_p(local_dir)
@@ -347,19 +359,25 @@ Forever.run do
         # Now start the render.
         # 1. blender config and command line
         render_filename = File.join(local_dir, filename)
-        cfg = "#{gpu_resp['render_engine']}_#{gpu_resp['compute']}.py"
-        cfg_path = File.join(@config['configs'], '/', cfg)
-        framing = "-s #{gpu_resp['render_frame_start']} -e #{gpu_resp['render_frame_stop']}"
+        cfg = "#{c_config['id']}.py"
+        cfg_path = File.join(local_dir, '/', cfg)
+
+        # Wrote config to file
+        ff = File.new(cfg_path, "w")
+        ff.write(c_config["config"])
+        ff.close
+
+        framing = "-s #{c_job['render_frame_start']} -e #{c_job['render_frame_stop']}"
         # output name like "render_CYCLES_GPU_0-0_id4_"
-        output_render_name = "render_#{gpu_resp['render_engine']}_#{gpu_resp['compute']}_#{gpu_resp['render_frame_start']}-#{gpu_resp['render_frame_stop']}_id#{gpu_resp['id']}_"
-        cmd = "-E #{gpu_resp['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
+        output_render_name = "render_#{c_job['render_engine']}_#{c_job['compute']}_#{c_job['render_frame_start']}-#{c_job['render_frame_stop']}_id#{c_job['id']}_"
+        cmd = "-E #{c_job['render_engine']} -b #{render_filename} -o #{@config['local_render_dir']}#{output_render_name} -P #{cfg_path} -F PNG #{framing} -a"
         # 2. start blender
         puts "GPU Will start blender with #{cmd}"
         FileUtils.mkdir_p(@config['local_render_dir'])
         b = File.join(@config['blender_path'], '/', @config['blender_bin'])
 
         semaphore.synchronize{
-          @thread_node_state[:gpu_job_infos] = {:job_id => gpu_resp['id']}
+          @thread_node_state[:gpu_job_infos] = {:job_id => c_job['id']}
         }
 
         # 3. do the magics!
@@ -382,7 +400,7 @@ Forever.run do
                   tstp_s = Time.now
                   infos = {
                     :uuid => @node_blendercfg['uuid'],
-                    :job_id => gpu_resp['id'],
+                    :job_id => c_job['id'],
                     :console_log => console_log,
                     :job_status => elapsed,
                     :node_status => 'rendering',
@@ -422,7 +440,7 @@ Forever.run do
           # error !
           infos_gpu = {
             :uuid => @node_blendercfg['uuid'],
-            :job_id => gpu_resp['id'],
+            :job_id => c_job['id'],
             :console_log => console_log,
             :access_token => @config['api_token'],
             :error => "Catched SIGINT"
@@ -434,7 +452,7 @@ Forever.run do
         puts "GPU Job finished in #{log_time}"
         infos = {
           :uuid => @node_blendercfg['uuid'],
-          :job_id => gpu_resp['id'],
+          :job_id => c_job['id'],
           :console_log => console_log,
           :output_file => File.new(log_saved, "rb"),
           :filename => File.basename(log_saved),
