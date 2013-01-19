@@ -83,6 +83,14 @@ class JobsController < ApplicationController
     end
   end
 
+  def reassign
+    # We just call assign, but we reset statues before that
+    @job = Job.find(params[:job_id])
+    @job.default_status
+    @job.save
+    assign
+  end
+
   def assign
     @job = Job.find(params[:job_id])
     # find a node compatible with this kind of caracteristics : CPU or GPU, RENDER_ENGINE
@@ -102,7 +110,7 @@ class JobsController < ApplicationController
     if the_node
       @job.node = the_node
       @job.save
-      redirect_to root_url, :notice => "Job assigned to #{the_node.name}."
+      redirect_to @job, :notice => "Job assigned to #{the_node.name}."
     else
       redirect_to root_url, :notice => "Can't find active node with #{@job.render_engine},#{@job.compute} capabilities."
     end
