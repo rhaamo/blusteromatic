@@ -25,6 +25,12 @@ case "$1" in
   restart)
   su -l $USER -c "$DAEMON restart"
   ;;
+  status)
+  su -l $USER -c "foreverb list"
+  ;;
+  log)
+  su -l $USER -c "foreverb tail node.rb"
+  ;;
   *)
   echo "Usage: $SCRIPT_NAME {start|stop|restart}" >&2
   exit 3
