@@ -3,3 +3,5 @@ source 'https://rubygems.org'
 gem 'open4'
 gem 'rest-client'
 gem 'foreverb'
+
+gem 'statgrab', :platforms => :ruby

@@ -14,6 +14,8 @@ require 'pty'
 require 'rest_client'
 require 'forever'
 
+require 'statgrab' if RUBY_PLATFORM == /linux/
+
 Forever.run do
   dir File.expand_path('../', __FILE__) # Default is ../../__FILE__
 
@@ -125,8 +127,16 @@ Forever.run do
     # Tread: HEARTBEAT
     # ===================================
     th_heartbeat = Thread.new do
+      host_stats = Statgrab.new
       while true
+        stats = {
+          :cpu => host_stats.cpu_percents,
+          :memory => host_stats.memory,
+          :load => host_stats.load,
+          :swap => host_stats.swap
+        }
         infos = @node_blendercfg
+        infos['stats'] = stats
         infos['access_token'] = @config['api_token']
         hb_resp = api_call('post', @config['api_heartbeat'], infos)
 
