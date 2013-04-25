@@ -313,7 +313,7 @@ Forever.run do
 
         sleep 10
       end
-    end
+    end if @config['compute'].match /CPU/i
 
     # ===================================
     # Tread: GPU
@@ -473,7 +473,7 @@ Forever.run do
 
         sleep 10
       end
-    end
+    end if @config['compute'].match /GPU/i
 
     # Start heartbeat thread
     th_heartbeat.join
