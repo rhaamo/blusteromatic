@@ -19,7 +19,11 @@ class Job < ActiveRecord::Base
   before_create :default_status
 
   def compute_hash
-    self.md5 = Digest::MD5.hexdigest(self.dot_blend.read)
+    if self.dot_blend.file
+      self.md5 = Digest::MD5.hexdigest(self.dot_blend.read)
+    else
+      self.md5 = ""
+    end
   end
   def save_filename
     self.filename = self.dot_blend.file.filename

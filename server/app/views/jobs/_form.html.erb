@@ -28,14 +28,14 @@
   <div class="control-group">
     <%= f.label :render_engine, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :render_engine, :class => 'text_field' %>
+      <%= f.select :render_engine, options_for_select(Node.blender_engines(1), :selected => "CYCLES") %>
     </div>
   </div>
 
   <div class="control-group">
     <%= f.label :compute, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :compute, :class => 'text_field' %>
+      <%= f.select :compute, options_for_select(Node.computes(1), :selected => "GPU") %>
     </div>
   </div>
 
