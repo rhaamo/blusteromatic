@@ -64,3 +64,6 @@ eos
 
 BlenderConfig.create(:name => "Cycles with CPU", :description => "Cycles with CPU", :config => conf_a, :public => 1)
 BlenderConfig.create(:name => "Cycles with GPU", :description => "Cycles with GPU and CUDA", :config => conf_b, :public => 1)
+
+Group.create(:name => "Default", :description => "Default group")
+Group.create(:name => "Public Event", :description => "Public event")
