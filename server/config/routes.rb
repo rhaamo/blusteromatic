@@ -1,4 +1,7 @@
 Blusteromatic::Application.routes.draw do
+  resources :groups
+
+
   namespace :api do
     resource :node do
       post "heartbeat"

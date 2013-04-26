@@ -1,6 +1,8 @@
 class Node < ActiveRecord::Base
   attr_accessible :os, :blender_engines, :uuid, :blender_version, :name, :validated, :last_ping, :compute
 
+  # Can be edited by admin : validated, paused and Group relations
+
   extend FriendlyId
   friendly_id :name, use: :slugged
 
