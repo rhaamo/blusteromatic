@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130426060124) do
+ActiveRecord::Schema.define(:version => 20130427085052) do
 
   create_table "blender_configs", :force => true do |t|
     t.string   "name"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20130426060124) do
     t.string   "md5"
     t.text     "log"
     t.integer  "blender_config_id"
+    t.integer  "group"
   end
 
   add_index "jobs", ["slug"], :name => "index_jobs_on_slug", :unique => true
@@ -69,6 +70,7 @@ ActiveRecord::Schema.define(:version => 20130426060124) do
     t.string   "slug"
     t.string   "compute",         :default => "CPU"
     t.integer  "paused",          :default => 0
+    t.integer  "group"
   end
 
   add_index "nodes", ["slug"], :name => "index_nodes_on_slug", :unique => true
@@ -81,6 +83,7 @@ ActiveRecord::Schema.define(:version => 20130426060124) do
     t.datetime "updated_at",  :null => false
     t.string   "render_time"
     t.text     "console_log"
+    t.integer  "user_id"
   end
 
   create_table "users", :force => true do |t|
@@ -99,6 +102,7 @@ ActiveRecord::Schema.define(:version => 20130426060124) do
     t.datetime "updated_at",                             :null => false
     t.string   "login"
     t.string   "slug"
+    t.integer  "role"
   end
 
   add_index "users", ["authentication_token"], :name => "index_users_on_authentication_token", :unique => true

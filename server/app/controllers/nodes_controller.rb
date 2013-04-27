@@ -1,5 +1,6 @@
 class NodesController < ApplicationController
   before_filter :authenticate_user!
+  load_and_authorize_resource
 
   # DELETE /nodes/1
   # DELETE /nodes/1.json

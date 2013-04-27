@@ -6,11 +6,16 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessible :login, :email, :password, :password_confirmation, :remember_me
+  attr_accessible :login, :email, :password, :password_confirmation, :remember_me, :role
 
   extend FriendlyId
   friendly_id :login, use: :slugged
 
   has_many :jobs
+  has_many :renders
+  
+  def admin?
+    self.role >= Group.get_id(:admin)
+  end
 
 end

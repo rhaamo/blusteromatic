@@ -10,15 +10,17 @@
       <div class="nav-collapse">
 	<ul class="nav">
 	  <li><%= link_to "Jobs list", root_url %></li>
-    <li><%= link_to "Blender configs", blender_configs_url %></li>
-    <li><%= link_to "Groups", groups_url %></li>
+    <%- if current_user && current_user.admin? %>
+      <li><%= link_to "Blender configs", blender_configs_url %></li>
+      <li><%= link_to "Groups", groups_url %></li>
+    <% end %>
     <li><%= link_to "New job", new_job_url %></li>
 	</ul> <!-- ul nav -->
 
 	<div class="btn-group pull-right">
             <%= link_to current_user, :class => "btn btn-primary" do %>
 	    <i class="icon-user icon-white"></i>
-	    <%= current_user.login %>
+	    <%= current_user.login %> (<%= Group.get_sym(current_user.role) %>)
             <% end %>
 
             <%= link_to "#", :class => "btn btn-info dropdown-toggle", :"data-toggle" => "dropdown" do %>
