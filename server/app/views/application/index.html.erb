@@ -18,6 +18,7 @@
           <th>Compute</th>
           <th>Last ping</th>
           <th>Blender version</th>
+          <th>Group</th>
           <th>Paused</th>
           <th>Actions</th>
         </tr>
@@ -35,6 +36,7 @@
             <td><%= node.compute %></td>
             <td><%= node.last_ping %></td>
             <td><%= node.blender_version %></td>
+            <td><%= Group.get_sym(node.group) %></td>
             <td><%= node.paused %></td>
             <td>
               <div class="btn-group">
