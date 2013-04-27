@@ -61,7 +61,8 @@ class Api::NodesController < ApplicationController
     r.output = params[:output_file]
     r.render_time = params[:render_time]
     r.console_log = params[:console_log]
-
+    r.user_id = job.user_id
+    
     r.save
     job.save
     render :json => {:status => 'ok'}

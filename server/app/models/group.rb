@@ -21,6 +21,9 @@ class Group < ActiveRecord::Base
     [1, 4, 12]
   end
 
+  def self.jobs_for_coll
+    [["public", 4], ["private", 8]]
+  end
 
   def self.all
     RAW_GROUPS

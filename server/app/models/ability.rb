@@ -10,6 +10,8 @@ class Ability
 
     can :manage, Job, :user_id => user.id
     can :manage, Render, :user_id => user.id
+
+    can :read, Job, :group => Group.get_id(:public)
   end
 
   def user_event(user)

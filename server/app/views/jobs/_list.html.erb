@@ -8,8 +8,11 @@
       <th>Type</th>
       <th>Node</th>
       <th>Render Time</th>
+      <th>Visibility</th>
       <th>Status</th>
-      <th>Actions</th>
+      <%- if current_user %>
+        <th>Actions</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -31,18 +34,21 @@
           <td>N/A</td>
         <% end %>
         <td><%= job.renders.last.render_time if job.renders.last %></td>
+        <td><%= Group.get_sym(job.group) %></td>
         <td>
           Job: <%= job.status || "N/A" %><br />
           Node: <%= job.node_status || "N/A" %>
         </td>
-        <td>
-          <div class="btn-group">
-            <%- if !job.node %>
-              <%= link_to "assign", job_assign_url(job), :class => "btn btn-mini btn-success" %>
-            <% end %>
-            <%= link_to "delete", job_path(job), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
-          </div>
-        </td>
+        <%- if current_user %>
+          <td>
+            <div class="btn-group">
+              <%- if !job.node %>
+                <%= link_to "assign", job_assign_url(job), :class => "btn btn-mini btn-success" %>
+              <% end %>
+              <%= link_to "delete", job_path(job), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
+            </div>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
