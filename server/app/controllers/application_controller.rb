@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
 
   private
   def ohai_can_you_please_check_if_the_controller_name_is_application_kthxbye?
+    return true if controller_path.start_with?("api/")
     if devise_controller?
       return true
     else
