@@ -97,6 +97,8 @@ class JobsController < ApplicationController
       next if !node.blender_engines.split(",").include? @job.render_engine
       # Skip not matching compute capabilities
       next if !node.compute.split(",").include? @job.compute
+      # Skip if the user doesn't have the right to use the node
+      next if !can? :use, node
       # If we are here, the node match all points \o/
       the_node = node
       break
