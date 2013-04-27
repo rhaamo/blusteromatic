@@ -40,6 +40,8 @@ class JobsController < ApplicationController
   def create
     @job = Job.new(params[:job])
 
+    @job.user = current_user
+
     respond_to do |format|
       if @job.save
         format.html { redirect_to @job, notice: 'Job was successfully created.' }
