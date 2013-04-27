@@ -1,6 +1,6 @@
 <%- model_class = Render -%>
 <div class="page-header">
-  <h3>Render of <%= link_to @job.name, @job %> in <%= @render.render_time %> on
+  <h3>Render of <%= link_to @render.job.name, @job %> in <%= @render.render_time %> on
   <%= @render.created_at %></h3>
 </div>
 
@@ -17,7 +17,7 @@
 
     <div class="form-actions">
       <%= link_to t('.back', :default => t("helpers.links.back")),
-          job_renders_path(@job), :class => 'btn'  %>
+          job_renders_path(@render.job), :class => 'btn'  %>
     </div>
   </div>
 

@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  before_filter :authenticate_user!, :only => :index
   check_authorization :unless => :ohai_can_you_please_check_if_the_controller_name_is_application_kthxbye?
 
   rescue_from CanCan::AccessDenied do |exception|

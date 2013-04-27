@@ -1,25 +1,22 @@
 <%- model_class = Render -%>
 <div class="page-header">
-  <h3>Renders for <%= @job.name %></h3>
+  <h3>Renders for <%= link_to @job.name, @job %></h3>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th></th>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:output) %></th>
-      <th><%= model_class.human_attribute_name(:render_time) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @renders.each do |render| %>
-      <tr>
-        <td><%= link_to render.id, job_render_path(@job, render) %></td>
-        <td><%= link_to "Output", render.output.url %></td>
-        <td><%= render.render_time %></td>
-        <td><%=l render.created_at %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+
+<ul class="thumbnails">
+  <%- @job.renders.order("created_at DESC").each do |r| %>
+    <li class="span3">
+      <div class="thumbnail">
+        <%= r.id %> - <%= r.created_at %>
+        <a href="<%= r.output %>">
+          <img src="<%= r.output %>" alt="<%= r.filename %>" />
+        </a>
+        <p>
+          Render time: <%= r.render_time %>
+          <br />
+          <%= link_to "Show render with log", job_render_url(@job, r), :class => "btn btn-mini" %>
+        </p>
+      </div>
+    </li>
+  <% end %>
+</ul>

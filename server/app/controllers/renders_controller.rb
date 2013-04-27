@@ -1,14 +1,7 @@
 class RendersController < ApplicationController
-  before_filter :authenticate_user!
-
+  load_and_authorize_resource
   def index
     @job = Job.find(params[:job_id])
-    @renders = @job.renders
+    authorize! :show, @job
   end
-
-  def show
-    @job = Job.find(params[:job_id])
-    @render = Render.find(params[:id])
-  end
-
 end
